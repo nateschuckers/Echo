@@ -367,13 +367,76 @@
                         </div>
                     </div>
                 </div>
-                <div class="step-content" data-step-content="3">...</div>
+                <div class="step-content" data-step-content="3">
+                    <div class="space-y-4">
+                        <div class="accordion">
+                            <button class="accordion-header"><h4>Outstanding, Gain/Loss Amounts Calculation</h4><i class="fa-solid fa-chevron-down accordion-icon open"></i></button>
+                            <div class="accordion-content open"><div class="pt-4 space-y-3">
+                                <div class="radio-group"><p class="input-label">To calculate 'Outstanding' and 'Gain/Loss' amount, compare 'Total In' to</p><div class="pl-4 mt-2 space-y-2">
+                                    <label><input type="radio" name="compare-total" checked> Card Value</label>
+                                    <label><input type="radio" name="compare-total"> Projection</label>
+                                </div></div>
+                                <div class="pl-4 space-y-2">
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox" checked> Count Finaled Accounts only...</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Hide Card Value on report</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Hide Verbal Amount on report</label>
+                                </div>
+                            </div></div>
+                        </div>
+                         <div class="accordion">
+                            <button class="accordion-header"><h4>Show Notes & Dates</h4><i class="fa-solid fa-chevron-down accordion-icon"></i></button>
+                            <div class="accordion-content"><div class="pt-4 space-y-4">
+                                <p class="input-label">Show Account/Communication Notes on report (PDF report only)</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Account Notes</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Communication Notes</label>
+                                </div>
+                                <p class="input-label mt-4">Show Campaign Date(s) on report</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Campaign Date</label>
+                                    <select class="filter-input"><option>Default Payroll Start Date</option></select>
+                                    <label class="checkbox-label"><input type="checkbox" class="checkbox"> Campaign Date</label>
+                                    <select class="filter-input"><option>Default Payroll Start Date</option></select>
+                                </div>
+                                <label class="checkbox-label mt-2"><input type="checkbox" class="checkbox" checked> Print dates at the total lines level</label>
+                            </div></div>
+                        </div>
+                         <div class="accordion">
+                            <button class="accordion-header"><h4>Contacts/Managers</h4><i class="fa-solid fa-chevron-down accordion-icon"></i></button>
+                            <div class="accordion-content"><div class="pt-4 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="checkbox-label"><input type="checkbox" id="show-contact-check" class="checkbox"> Show Contact</label>
+                                    <select id="contact-type-select" class="filter-input w-1/2" disabled><option>Employee Campaign Coordinator</option></select>
+                                </div>
+                                <div class="flex items-center">
+                                    <label class="checkbox-label"><input type="checkbox" id="show-manager-check" class="checkbox"> Show Manager</label>
+                                </div>
+                                <div id="manager-options" class="pl-6 space-y-3 opacity-50">
+                                    <div class="input-group"><label class="input-label">By Type</label><select class="filter-input" disabled><option>Account Executive - Primary</option></select></div>
+                                    <div class="radio-group"><p class="input-label">By Pecking Order</p><div class="pl-4 mt-2 space-y-2">
+                                        <label><input type="radio" name="manager-select" disabled> Select Account Manager, or Node Manager if not found</label>
+                                        <label><input type="radio" name="manager-select" disabled> Select Account Manager Only</label>
+                                        <label><input type="radio" name="manager-select" disabled> Select Node Manager Only</label>
+                                    </div></div>
+                                </div>
+                            </div></div>
+                        </div>
+                         <div class="accordion">
+                            <button class="accordion-header"><h4>Special Formatting</h4><i class="fa-solid fa-chevron-down accordion-icon"></i></button>
+                            <div class="accordion-content"><div class="pt-4">
+                                <div class="radio-group"><p class="input-label">Percent Value Decimal Places</p><div class="flex items-center gap-4 mt-2">
+                                    <label><input type="radio" name="decimal-places"> None</label>
+                                    <label><input type="radio" name="decimal-places" checked> One</label>
+                                    <label><input type="radio" name="decimal-places"> Two</label>
+                                </div></div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="step-content" data-step-content="4">
                     <div class="space-y-3">
                         <p class="text-sm text-gray-400">Drag to reorder, edit name, and toggle visibility.</p>
-                        <ul id="monitoring-column-manager" class="space-y-2">
-                            <!-- Columns will be dynamically inserted here by JavaScript -->
-                        </ul>
+                        <ul id="monitoring-column-manager" class="space-y-2"></ul>
                     </div>
                 </div>
                 <div class="step-content" data-step-content="5"><div class="scheduler-placeholder"></div></div>
