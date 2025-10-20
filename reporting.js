@@ -155,6 +155,28 @@ document.addEventListener('DOMContentLoaded', () => {
             produceRecapCheck.dataset.listenerAttached = true;
         }
 
+        // More Selections Interactivity
+        const showContactCheck = container.querySelector('#show-contact-check');
+        if(showContactCheck && !showContactCheck.dataset.listenerAttached) {
+            const contactTypeSelect = container.querySelector('#contact-type-select');
+            showContactCheck.addEventListener('change', () => {
+                contactTypeSelect.disabled = !showContactCheck.checked;
+            });
+            showContactCheck.dataset.listenerAttached = true;
+        }
+        
+        const showManagerCheck = container.querySelector('#show-manager-check');
+        if(showManagerCheck && !showManagerCheck.dataset.listenerAttached) {
+            const managerOptions = container.querySelector('#manager-options');
+            showManagerCheck.addEventListener('change', () => {
+                const isChecked = showManagerCheck.checked;
+                managerOptions.classList.toggle('opacity-50', !isChecked);
+                managerOptions.querySelectorAll('input, select').forEach(el => el.disabled = !isChecked);
+            });
+            showManagerCheck.dataset.listenerAttached = true;
+        }
+
+
         // Column Manager Logic
         if (container.id === 'monitoring-report-options' && !container.dataset.columnsInitialized) {
             initializeColumnManager();
