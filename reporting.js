@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawerTitle = getEl('drawer-title');
     const runReportButtons = document.querySelectorAll('.run-report-btn');
     const closeDrawerButtons = [getEl('close-drawer-btn'), getEl('cancel-drawer-btn'), drawerBackdrop];
+    const previewReportBtn = getEl('preview-report-btn');
     
     // --- Reusable Scheduler Component HTML ---
     const schedulerHTML = `
@@ -192,6 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsContainer.style.display = 'block';
             initializeDrawerUI(optionsContainer);
         }
+
+        // Show/hide preview button based on report type
+        previewReportBtn.classList.toggle('hidden', reportType !== 'monitoring');
+
         drawer.classList.add('active');
         drawerBackdrop.classList.add('active');
     };
@@ -234,16 +239,40 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMultiSelectModal('campaign-type-modal', 'campaign-type-checkboxes', 'campaign-type-modal-done', ['Corporate', 'Other Campaign', 'Employee', 'Other Non-Campaign', 'Individual', 'Workplace Special Event'], '[data-modal-target="campaign-type-modal"]');
     setupMultiSelectModal('campaign-status-modal', 'campaign-status-checkboxes', 'campaign-status-modal-done', ['Unknown', 'Final', 'Partial'], '[data-modal-target="campaign-status-modal"]');
 
-    // --- Column Manager ---
+    // --- Column Manager & Preview ---
     let monitoringReportColumns = [
+        // Merged list from all screenshots
+        { id: 'structureNode', original: 'Structure Node', current: 'Structure Node', visible: true },
+        { id: 'manager', original: 'Manager', current: 'Manager', visible: true },
         { id: 'accountName', original: 'Account Name', current: 'Account Name', visible: true },
-        { id: 'campaignType', original: 'Campaign Type', current: 'Campaign Type', visible: true },
+        { id: 'payrollStart', original: 'PayrollStart', current: 'Payroll Start', visible: false },
+        { id: 'accountNum', original: 'Account #', current: 'Acct #', visible: true },
+        { id: 'campaignName', original: 'Campaign Name', current: 'Campaign', visible: true },
+        { id: 'campaignStart', original: 'Campaign Start', current: 'Camp. Start', visible: false },
+        { id: 'campaignEnd', original: 'Campaign End', current: 'Camp. End', visible: false },
+        { id: 'campaignType', original: 'Campaign Type', current: 'Camp. Type', visible: true },
         { id: 'prevYrProc', original: 'Prev Yr Proc', current: 'Prev Yr Proc', visible: true },
-        { id: 'cardValue', original: 'Card Value', current: 'Card Value', visible: false },
-        { id: 'goal', original: 'Goal', current: 'Goal', visible: true },
-        { id: 'processed', original: 'Processed', current: 'Processed', visible: true },
-        { id: 'totalIn', original: 'Total In', current: 'Total In', visible: true },
-        { id: 'gainLoss', original: 'GainLoss vs CV', current: 'Gain/Loss', visible: true }
+        { id: 'managerType', original: 'managerType', current: 'Mgr Type', visible: false },
+        { id: 'incrOnCVConsumed', original: '% Incr on CV Consumed', current: '% Incr CV', visible: false },
+        { id: 'incrOpenCV', original: '% Incr OpenCV to meet Goal', current: '% Incr OpenCV', visible: false },
+        { id: 'accountType', original: 'ACCOUNTTYPE', current: 'Acct Type', visible: false },
+        { id: 'campaignAccount', original: 'Campaign Account', current: 'Camp. Acct', visible: false },
+        { id: 'consumedCV', original: 'Consumed CV', current: 'CV Consumed', visible: false },
+        { id: 'managerDesc', original: 'managerDesc', current: 'Mgr Desc', visible: false },
+        { id: 'nodeNumber', original: 'Node Number', current: 'Node #', visible: false },
+        { id: 'prevYrProcMemo', original: 'Prev Yr Proc Memo', current: 'Prev Yr Memo', visible: false },
+        { id: 'processedMemo', original: 'Processed Memo', current: 'Proc. Memo', visible: false },
+        { id: 'projChgGoal', original: 'Proj. %Chg Goal', current: 'Proj. % Chg Goal', visible: false },
+        { id: 'rnGainLoss', original: 'RN Gain/Loss vs CV', current: 'Gain/Loss', visible: true },
+        { id: 'rnProcessed', original: 'RN Processed', current: 'Processed', visible: true },
+        { id: 'rnTotalIn', original: 'RN Total In', current: 'Total In', visible: true },
+        { id: 'rnTotInChgCV', original: 'RN TotIn %Chg CV', current: '% Chg CV', visible: true },
+        { id: 'spDesignNonRenew', original: 'SP Design NonRenew', current: 'Non-Renew', visible: false },
+        { id: 'spDesignRenew', original: 'SP Design Renew', current: 'Renew', visible: false },
+        { id: 'spDesignTotal', original: 'SP Design Total', current: 'Design Total', visible: false },
+        { id: 'spNodeGoal', original: 'SP Node Goal', current: 'Node Goal', visible: false },
+        { id: 'subaccount', original: 'SUBACCOUNT', current: 'Sub-Acct', visible: false },
+        { id: 'totalInMemo', original: 'Total In Memo', current: 'Total In Memo', visible: false }
     ];
 
     function initializeColumnManager() {
@@ -276,7 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     draggedItem.classList.add('dragging');
                 });
 
-                item.addEventListener('dragend', (e) => {
+                item.addEventListener('dragend', () => {
+                    if (!draggedItem) return;
                     draggedItem.classList.remove('dragging');
                     draggedItem = null;
                 });
@@ -286,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     monitoringReportColumns[index].current = e.target.value;
                 });
 
-                item.querySelector('.toggle-visibility-btn').addEventListener('click', (e) => {
+                item.querySelector('.toggle-visibility-btn').addEventListener('click', () => {
                     const index = item.dataset.index;
                     monitoringReportColumns[index].visible = !monitoringReportColumns[index].visible;
                     renderColumns();
@@ -330,6 +360,35 @@ document.addEventListener('DOMContentLoaded', () => {
         renderColumns();
         attachListeners();
     }
+
+    // --- Preview Modal Logic ---
+    const previewModal = getEl('report-preview-modal');
+    const closePreviewBtn = getEl('close-preview-btn');
+    const previewContent = getEl('preview-content');
+
+    const renderReportPreview = () => {
+        const visibleColumns = monitoringReportColumns.filter(c => c.visible);
+        let tableHTML = '<table><thead><tr>';
+        visibleColumns.forEach(c => { tableHTML += `<th>${c.current}</th>`; });
+        tableHTML += '</tr></thead><tbody>';
+
+        // Generate a few rows of mock data for preview
+        for (let i = 1; i <= 5; i++) {
+            tableHTML += '<tr>';
+            visibleColumns.forEach(col => {
+                tableHTML += `<td>${col.id} data ${i}</td>`;
+            });
+            tableHTML += '</tr>';
+        }
+
+        tableHTML += '</tbody></table>';
+        previewContent.innerHTML = tableHTML;
+        previewModal.style.display = 'flex';
+    };
+
+    previewReportBtn.addEventListener('click', renderReportPreview);
+    closePreviewBtn.addEventListener('click', () => previewModal.style.display = 'none');
+    previewModal.addEventListener('click', (e) => { if(e.target === previewModal) previewModal.style.display = 'none'});
 
 
     // --- ORIGINAL REPORTING.JS LOGIC (for 'Build a Report' page) ---
