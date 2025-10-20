@@ -241,122 +241,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Column Manager & Preview ---
     let monitoringReportColumns = [
-        // Merged list from all screenshots
-        { id: 'structureNode', original: 'Structure Node', current: 'Structure Node', visible: true },
-        { id: 'manager', original: 'Manager', current: 'Manager', visible: true },
-        { id: 'accountName', original: 'Account Name', current: 'Account Name', visible: true },
-        { id: 'payrollStart', original: 'PayrollStart', current: 'Payroll Start', visible: false },
-        { id: 'accountNum', original: 'Account #', current: 'Acct #', visible: true },
-        { id: 'campaignName', original: 'Campaign Name', current: 'Campaign', visible: true },
-        { id: 'campaignStart', original: 'Campaign Start', current: 'Camp. Start', visible: false },
-        { id: 'campaignEnd', original: 'Campaign End', current: 'Camp. End', visible: false },
-        { id: 'campaignType', original: 'Campaign Type', current: 'Camp. Type', visible: true },
-        { id: 'prevYrProc', original: 'Prev Yr Proc', current: 'Prev Yr Proc', visible: true },
-        { id: 'managerType', original: 'managerType', current: 'Mgr Type', visible: false },
-        { id: 'incrOnCVConsumed', original: '% Incr on CV Consumed', current: '% Incr CV', visible: false },
-        { id: 'incrOpenCV', original: '% Incr OpenCV to meet Goal', current: '% Incr OpenCV', visible: false },
-        { id: 'accountType', original: 'ACCOUNTTYPE', current: 'Acct Type', visible: false },
-        { id: 'campaignAccount', original: 'Campaign Account', current: 'Camp. Acct', visible: false },
-        { id: 'consumedCV', original: 'Consumed CV', current: 'CV Consumed', visible: false },
-        { id: 'managerDesc', original: 'managerDesc', current: 'Mgr Desc', visible: false },
-        { id: 'nodeNumber', original: 'Node Number', current: 'Node #', visible: false },
-        { id: 'prevYrProcMemo', original: 'Prev Yr Proc Memo', current: 'Prev Yr Memo', visible: false },
-        { id: 'processedMemo', original: 'Processed Memo', current: 'Proc. Memo', visible: false },
-        { id: 'projChgGoal', original: 'Proj. %Chg Goal', current: 'Proj. % Chg Goal', visible: false },
-        { id: 'rnGainLoss', original: 'RN Gain/Loss vs CV', current: 'Gain/Loss', visible: true },
-        { id: 'rnProcessed', original: 'RN Processed', current: 'Processed', visible: true },
-        { id: 'rnTotalIn', original: 'RN Total In', current: 'Total In', visible: true },
-        { id: 'rnTotInChgCV', original: 'RN TotIn %Chg CV', current: '% Chg CV', visible: true },
-        { id: 'spDesignNonRenew', original: 'SP Design NonRenew', current: 'Non-Renew', visible: false },
-        { id: 'spDesignRenew', original: 'SP Design Renew', current: 'Renew', visible: false },
-        { id: 'spDesignTotal', original: 'SP Design Total', current: 'Design Total', visible: false },
-        { id: 'spNodeGoal', original: 'SP Node Goal', current: 'Node Goal', visible: false },
-        { id: 'subaccount', original: 'SUBACCOUNT', current: 'Sub-Acct', visible: false },
-        { id: 'totalInMemo', original: 'Total In Memo', current: 'Total In Memo', visible: false }
+        { id: 'structureNode', original: 'Structure Node', current: 'Structure Node', visible: true }, { id: 'manager', original: 'Manager', current: 'Manager', visible: true }, { id: 'accountName', original: 'Account Name', current: 'Account Name', visible: true }, { id: 'payrollStart', original: 'PayrollStart', current: 'Payroll Start', visible: false }, { id: 'accountNum', original: 'Account #', current: 'Acct #', visible: true }, { id: 'campaignName', original: 'Campaign Name', current: 'Campaign', visible: true }, { id: 'campaignStart', original: 'Campaign Start', current: 'Camp. Start', visible: false }, { id: 'campaignEnd', original: 'Campaign End', current: 'Camp. End', visible: false }, { id: 'campaignType', original: 'Campaign Type', current: 'Camp. Type', visible: true }, { id: 'prevYrProc', original: 'Prev Yr Proc', current: 'Prev Yr Proc', visible: true }, { id: 'managerType', original: 'managerType', current: 'Mgr Type', visible: false }, { id: 'incrOnCVConsumed', original: '% Incr on CV Consumed', current: '% Incr CV', visible: false }, { id: 'incrOpenCV', original: '% Incr OpenCV to meet Goal', current: '% Incr OpenCV', visible: false }, { id: 'accountType', original: 'ACCOUNTTYPE', current: 'Acct Type', visible: false }, { id: 'campaignAccount', original: 'Campaign Account', current: 'Camp. Acct', visible: false }, { id: 'consumedCV', original: 'Consumed CV', current: 'CV Consumed', visible: false }, { id: 'managerDesc', original: 'managerDesc', current: 'Mgr Desc', visible: false }, { id: 'nodeNumber', original: 'Node Number', current: 'Node #', visible: false }, { id: 'prevYrProcMemo', original: 'Prev Yr Proc Memo', current: 'Prev Yr Memo', visible: false }, { id: 'processedMemo', original: 'Processed Memo', current: 'Proc. Memo', visible: false }, { id: 'projChgGoal', original: 'Proj. %Chg Goal', current: 'Proj. % Chg Goal', visible: false }, { id: 'rnGainLoss', original: 'RN Gain/Loss vs CV', current: 'Gain/Loss', visible: true }, { id: 'rnProcessed', original: 'RN Processed', current: 'Processed', visible: true }, { id: 'rnTotalIn', original: 'RN Total In', current: 'Total In', visible: true }, { id: 'rnTotInChgCV', original: 'RN TotIn %Chg CV', current: '% Chg CV', visible: true }, { id: 'spDesignNonRenew', original: 'SP Design NonRenew', current: 'Non-Renew', visible: false }, { id: 'spDesignRenew', original: 'SP Design Renew', current: 'Renew', visible: false }, { id: 'spDesignTotal', original: 'SP Design Total', current: 'Design Total', visible: false }, { id: 'spNodeGoal', original: 'SP Node Goal', current: 'Node Goal', visible: false }, { id: 'subaccount', original: 'SUBACCOUNT', current: 'Sub-Acct', visible: false }, { id: 'totalInMemo', original: 'Total In Memo', current: 'Total In Memo', visible: false }
     ];
 
     function initializeColumnManager() {
         const container = getEl('monitoring-column-manager');
         let draggedItem = null;
-
         function renderColumns() {
             container.innerHTML = '';
             monitoringReportColumns.forEach((col, index) => {
                 const item = document.createElement('li');
                 item.className = `column-item flex items-center gap-3 p-2 bg-gray-800 border border-gray-700 rounded-md transition-opacity ${!col.visible ? 'hidden-column' : ''}`;
-                item.draggable = true;
-                item.dataset.index = index;
-                
-                item.innerHTML = `
-                    <i class="fa-solid fa-grip-vertical text-gray-500 cursor-grab drag-handle"></i>
-                    <input type="text" class="filter-input flex-grow" value="${col.current}">
-                    <button class="text-gray-400 hover:text-white toggle-visibility-btn w-6 h-6">
-                        <i class="fa-solid ${col.visible ? 'fa-eye' : 'fa-eye-slash'}"></i>
-                    </button>
-                `;
+                item.draggable = true; item.dataset.index = index;
+                item.innerHTML = `<i class="fa-solid fa-grip-vertical text-gray-500 cursor-grab drag-handle"></i><input type="text" class="filter-input flex-grow" value="${col.current}"><button class="text-gray-400 hover:text-white toggle-visibility-btn w-6 h-6"><i class="fa-solid ${col.visible ? 'fa-eye' : 'fa-eye-slash'}"></i></button>`;
                 container.appendChild(item);
             });
         }
-
         function attachListeners() {
             container.querySelectorAll('.column-item').forEach(item => {
-                item.addEventListener('dragstart', (e) => {
-                    draggedItem = e.target.closest('.column-item');
-                    draggedItem.classList.add('dragging');
-                });
-
-                item.addEventListener('dragend', () => {
-                    if (!draggedItem) return;
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                });
-
-                item.querySelector('.filter-input').addEventListener('input', (e) => {
-                    const index = item.dataset.index;
-                    monitoringReportColumns[index].current = e.target.value;
-                });
-
-                item.querySelector('.toggle-visibility-btn').addEventListener('click', () => {
-                    const index = item.dataset.index;
-                    monitoringReportColumns[index].visible = !monitoringReportColumns[index].visible;
-                    renderColumns();
-                    attachListeners();
-                });
+                item.addEventListener('dragstart', (e) => { draggedItem = e.target.closest('.column-item'); draggedItem.classList.add('dragging'); });
+                item.addEventListener('dragend', () => { if (!draggedItem) return; draggedItem.classList.remove('dragging'); draggedItem = null; });
+                item.querySelector('.filter-input').addEventListener('input', (e) => { monitoringReportColumns[item.dataset.index].current = e.target.value; });
+                item.querySelector('.toggle-visibility-btn').addEventListener('click', () => { monitoringReportColumns[item.dataset.index].visible = !monitoringReportColumns[item.dataset.index].visible; renderColumns(); attachListeners(); });
             });
         }
-
         container.addEventListener('dragover', (e) => {
             e.preventDefault();
             const afterElement = getDragAfterElement(container, e.clientY);
             const currentDragged = document.querySelector('.dragging');
-            if (afterElement == null) {
-                container.appendChild(currentDragged);
-            } else {
-                container.insertBefore(currentDragged, afterElement);
-            }
+            if (afterElement == null) { container.appendChild(currentDragged); } else { container.insertBefore(currentDragged, afterElement); }
         });
-
-        container.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const newOrder = Array.from(container.children).map(item => monitoringReportColumns[item.dataset.index]);
-            monitoringReportColumns = newOrder;
-            renderColumns();
-            attachListeners();
-        });
-
+        container.addEventListener('drop', (e) => { e.preventDefault(); const newOrder = Array.from(container.children).map(item => monitoringReportColumns[item.dataset.index]); monitoringReportColumns = newOrder; renderColumns(); attachListeners(); });
         function getDragAfterElement(container, y) {
             const draggableElements = [...container.querySelectorAll('.column-item:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            return draggableElements.reduce((closest, child) => { const box = child.getBoundingClientRect(); const offset = y - box.top - box.height / 2; if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; } else { return closest; } }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
-
         renderColumns();
         attachListeners();
     }
@@ -371,36 +290,27 @@ document.addEventListener('DOMContentLoaded', () => {
         let tableHTML = '<table><thead><tr>';
         visibleColumns.forEach(c => { tableHTML += `<th>${c.current}</th>`; });
         tableHTML += '</tr></thead><tbody>';
-
-        // Generate a few rows of mock data for preview
         for (let i = 1; i <= 5; i++) {
             tableHTML += '<tr>';
-            visibleColumns.forEach(col => {
-                tableHTML += `<td>${col.id} data ${i}</td>`;
-            });
+            visibleColumns.forEach(col => { tableHTML += `<td>${col.id} data ${i}</td>`; });
             tableHTML += '</tr>';
         }
-
         tableHTML += '</tbody></table>';
         previewContent.innerHTML = tableHTML;
         previewModal.style.display = 'flex';
     };
-
     previewReportBtn.addEventListener('click', renderReportPreview);
     closePreviewBtn.addEventListener('click', () => previewModal.style.display = 'none');
     previewModal.addEventListener('click', (e) => { if(e.target === previewModal) previewModal.style.display = 'none'});
 
-
-    // --- [RESTORED] CUSTOM REPORT BUILDER LOGIC ---
+    // --- [FULLY RESTORED] CUSTOM REPORT BUILDER LOGIC ---
     const initializeBuilderPage = () => {
         if (!getEl('reporting-sidebar')) return;
 
-        // --- STATE & CONSTANTS ---
         let allData = [];
         let currentFilteredData = [];
         let customChart = null;
         let selectedFields = ['name', 'role', 'donationAmount', 'pledgePaid', 'churnStatus'];
-        let savedCustomReports = [];
         
         const USER_ROLES = ['Employee', 'Individual', 'Volunteer', 'Attendee'];
         const WORKPLACES = ['TechCorp', 'HealthInc', 'EduGreat', 'FinanceLLC', 'RetailCo', 'No Workplace'];
@@ -419,22 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const GROUPABLE_FIELDS = [ { key: 'churnStatus', label: 'Churn Status' }, { key: 'workplace', label: 'Workplace' }, { key: 'giftType', label: 'Gift Type'}, { key: 'campaignYear', label: 'Campaign Year'}, { key: 'campaignType', label: 'Campaign Type'}, { key: 'paymentType', label: 'Payment Type'} ];
         const METRIC_FIELDS = [ { key: 'donationAmount', label: 'Sum of Donation Amount'}, { key: 'pledgeAmount', label: 'Sum of Pledge Amount'}, { key: 'paymentAmount', label: 'Sum of Payment Amount'}, { key: 'volunteerOppsAttended', label: 'Sum of Volunteer Opps'}, { key: 'eventsAttended', label: 'Sum of Total Events'} ];
         
-        // --- DOM ELEMENTS ---
-        const sidebarTabs = {
-            filtersBtn: getEl('filters-tab-btn'),
-            savedReportsBtn: getEl('saved-reports-tab-btn'),
-            filtersContent: getEl('filters-tab-content'),
-            savedReportsContent: getEl('saved-reports-tab-content')
-        };
-        const saveReportModal = {
-            modal: getEl('save-custom-report-modal'),
-            nameInput: getEl('custom-report-name-input'),
-            saveBtn: getEl('save-custom-report-save-btn'),
-            cancelBtn: getEl('save-custom-report-cancel-btn')
-        };
-        const savedReportsList = getEl('saved-reports-list');
-        
-        // --- DATA GENERATION ---
         const generateData = (count) => {
             const data = [];
             for (let i = 0; i < count; i++) {
@@ -459,8 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         allData = generateData(5000);
 
-        // --- RENDER FUNCTIONS ---
-        const renderTable = () => {
+        const renderTable = (data) => {
             const tableHead = getEl('data-table-head');
             const tableBody = getEl('data-table-body');
             tableHead.innerHTML = ''; tableBody.innerHTML = '';
@@ -470,8 +363,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (field) { const th = document.createElement('th'); th.className = "px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"; th.textContent = field.label; headerRow.appendChild(th); }
             });
             tableHead.appendChild(headerRow);
-            if (currentFilteredData.length === 0) { tableBody.innerHTML = `<tr><td colspan="${selectedFields.length}" class="text-center py-8 text-gray-500">No accounts match the selected filters.</td></tr>`; return; }
-            currentFilteredData.slice(0, 200).forEach(d => {
+            if (data.length === 0) { tableBody.innerHTML = `<tr><td colspan="${selectedFields.length}" class="text-center py-8 text-gray-500">No accounts match the selected filters.</td></tr>`; return; }
+            data.slice(0, 200).forEach(d => {
                 const row = document.createElement('tr'); row.className = "hover:bg-gray-700/50";
                 selectedFields.forEach(fieldKey => {
                     const td = document.createElement('td'); td.className = "px-4 py-3 whitespace-nowrap text-sm text-gray-300";
@@ -485,9 +378,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.appendChild(row);
             });
         };
-        const renderCustomChart = (chartData, chartType, title) => { /* ... */ };
+        const renderCustomChart = (chartData, chartType, title) => {
+            const ctx = getEl('custom-chart-canvas').getContext('2d');
+            if (customChart) customChart.destroy();
+            getEl('chart-display-title').textContent = title;
+            customChart = new Chart(ctx, { type: chartType, data: { labels: chartData.labels, datasets: [{ label: chartData.metricLabel, data: chartData.data, backgroundColor: ['#4f4e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6', '#ec4899'], borderColor: '#4b5563', }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#d1d5db' } } } } });
+            getEl('chart-display-modal').style.display = 'flex';
+        };
 
-        // --- FILTERING ---
         const applyFilters = () => {
             const getSelected = (id) => Array.from(document.querySelectorAll(`#${id} input:checked`)).map(cb => cb.value);
             const filters = {
@@ -502,19 +400,12 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFilteredData = allData.filter(d => {
                 const roleMatch = filters.selectedRoles.length === 0 || (filters.roleLogic === 'or' ? filters.selectedRoles.some(r => d.role.includes(r)) : filters.selectedRoles.every(r => d.role.includes(r)));
                 const pledgeMatch = filters.selectedPledge.length === 0 || (filters.selectedPledge.includes('paid') && d.pledgePaid) || (filters.selectedPledge.includes('unpaid') && !d.pledgePaid);
-                return roleMatch && pledgeMatch && (filters.selectedWorkplaces.length === 0 || filters.selectedWorkplaces.includes(d.workplace)) && (d.donationAmount >= filters.minAmount && d.donationAmount <= filters.maxAmount) // ... full filter logic
+                return roleMatch && pledgeMatch && (filters.selectedWorkplaces.length === 0 || filters.selectedWorkplaces.includes(d.workplace)) && (d.donationAmount >= filters.minAmount && d.donationAmount <= filters.maxAmount) && (filters.selectedOpps.length === 0 || filters.selectedOpps.some(opp => d.volunteerHistory.includes(opp))) && (filters.selectedEvents.length === 0 || filters.selectedEvents.some(evt => d.eventHistory.includes(evt))) && (d.volunteerOppsAttended >= filters.minVolunteerEvents && d.volunteerOppsAttended <= filters.maxVolunteerEvents) && (d.eventsAttended >= filters.minTotalEvents && d.eventsAttended <= filters.maxTotalEvents) && (filters.selectedGiftTypes.length === 0 || filters.selectedGiftTypes.includes(d.giftType)) && (filters.selectedChurn.length === 0 || filters.selectedChurn.includes(d.churnStatus)) && (filters.selectedCampaignYears.length === 0 || filters.selectedCampaignYears.includes(String(d.campaignYear))) && (filters.selectedCampaignTypes.length === 0 || filters.selectedCampaignTypes.includes(d.campaignType)) && (filters.selectedPaymentTypes.length === 0 || filters.selectedPaymentTypes.includes(d.paymentType));
             });
             getEl('results-count').textContent = currentFilteredData.length.toLocaleString();
-            renderTable();
+            renderTable(currentFilteredData);
         };
 
-        // --- SAVED REPORTS LOGIC ---
-        const populateSavedReportsList = () => { /* ... see above ... */ };
-        const getCurrentFilters = () => { /* ... see above ... */ return {}; };
-        const loadFilters = (filters) => { /* ... see above ... */ };
-        populateSavedReportsList(); // Initial population
-
-        // --- SETUP & EVENT LISTENERS ---
         const populateCheckboxes = (containerId, options) => {
             const container = getEl(containerId); if (!container) return; container.innerHTML = '';
             options.forEach(opt => { const label = typeof opt === 'object' ? opt.label : opt; const value = typeof opt === 'object' ? opt.key : opt; container.innerHTML += `<label class="checkbox-label"><input type="checkbox" class="checkbox" value="${value}"><span>${label}</span></label>`; });
@@ -523,41 +414,110 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = getEl(buttonId); const modal = getEl(modalId); if (!button || !modal) return;
             getEl(doneButtonId).addEventListener('click', () => {
                 modal.style.display = 'none';
-                if (checkboxesSelector) { /* ... logic to update button text ... */ }
+                if (checkboxesSelector) {
+                    const selected = Array.from(document.querySelectorAll(`${checkboxesSelector} input:checked`)).map(cb => cb.value);
+                    button.textContent = selected.length === 0 ? defaultText : selected.length > 2 ? `${selected.length} selected` : selected.map(val => { const option = PLEDGE_STATUSES.find(p => p.key === val); return option ? option.label : val; }).join(', ');
+                    button.classList.toggle('active', selected.length > 0);
+                }
                 applyFilters();
             });
             button.addEventListener('click', () => modal.style.display = 'flex');
             modal.addEventListener('click', (e) => { if (e.target === modal) getEl(doneButtonId).click(); });
         };
-        
-        // Populate all filter modals
+
         populateCheckboxes('role-checkboxes', USER_ROLES);
         populateCheckboxes('workplace-checkboxes', WORKPLACES);
-        // ... all others
+        populateCheckboxes('opportunity-checkboxes', VOLUNTEER_OPPORTUNITIES);
+        populateCheckboxes('event-checkboxes', EVENT_NAMES);
+        populateCheckboxes('pledge-checkboxes', PLEDGE_STATUSES);
+        populateCheckboxes('churn-checkboxes', CHURN_STATUSES);
+        populateCheckboxes('gift-type-checkboxes', GIFT_TYPES);
+        populateCheckboxes('campaign-year-checkboxes', CAMPAIGN_YEARS);
+        populateCheckboxes('campaign-type-checkboxes', CAMPAIGN_TYPES);
+        populateCheckboxes('payment-type-checkboxes', PAYMENT_TYPES);
         
-        // Setup all filter modals
         setupModal('role-filter-button', 'role-modal', 'role-modal-done', '#role-checkboxes', 'All Roles');
         setupModal('workplace-filter-button', 'workplace-modal', 'workplace-modal-done', '#workplace-checkboxes', 'All Workplaces');
-        // ... all others
-
-        // Other main button listeners
+        setupModal('opportunity-filter-button', 'opportunity-modal', 'opportunity-modal-done', '#opportunity-checkboxes', 'Any Opportunity');
+        setupModal('event-filter-button', 'event-modal', 'event-modal-done', '#event-checkboxes', 'Any Event');
+        setupModal('pledge-filter-button', 'pledge-modal', 'pledge-modal-done', '#pledge-checkboxes', 'All Pledge Statuses');
+        setupModal('churn-filter-button', 'churn-modal', 'churn-modal-done', '#churn-checkboxes', 'All Churn Statuses');
+        setupModal('gift-type-filter-button', 'gift-type-modal', 'gift-type-modal-done', '#gift-type-checkboxes', 'All Gift Types');
+        setupModal('campaign-year-filter-button', 'campaign-year-modal', 'campaign-year-modal-done', '#campaign-year-checkboxes', 'All Campaign Years');
+        setupModal('campaign-type-filter-button', 'campaign-type-modal', 'campaign-type-modal-done', '#campaign-type-checkboxes', 'All Campaign Types');
+        setupModal('payment-type-filter-button', 'payment-type-modal', 'payment-type-modal-done', '#payment-type-checkboxes', 'All Payment Types');
+        
+        const fieldsCheckboxes = getEl('fields-checkboxes');
+        fieldsCheckboxes.innerHTML = '';
+        ALL_FIELDS.forEach(field => { fieldsCheckboxes.innerHTML += `<label class="checkbox-label"><input type="checkbox" class="checkbox" value="${field.key}" ${selectedFields.includes(field.key) ? 'checked' : ''}><span>${field.label}</span></label>`; });
+        
+        const populateSelect = (selectEl, options, defaultOption) => { if (!selectEl) return; selectEl.innerHTML = `<option value="all" disabled selected>${defaultOption}</option>`; options.forEach(opt => { selectEl.innerHTML += `<option value="${opt.key}">${opt.label}</option>`; }); };
+        populateSelect(getEl('group-by-select'), GROUPABLE_FIELDS, 'Select Field');
+        populateSelect(getEl('metric-select'), METRIC_FIELDS, 'Select Metric');
+        
+        document.querySelectorAll('.filter-input').forEach(el => el.addEventListener('input', applyFilters));
+        document.querySelectorAll('input[name="role-logic"]').forEach(el => el.addEventListener('change', applyFilters));
+        document.querySelectorAll('.filter-toggle-button').forEach(button => button.addEventListener('click', () => { const target = getEl(button.dataset.target); target.classList.toggle('open'); button.querySelector('i').classList.toggle('rotate-180'); }));
+        
         getEl('select-fields-button').addEventListener('click', () => getEl('fields-modal').style.display = 'flex');
         getEl('fields-modal-done').addEventListener('click', () => { selectedFields = Array.from(document.querySelectorAll('#fields-checkboxes input:checked')).map(cb => cb.value); getEl('fields-modal').style.display = 'none'; applyFilters(); });
 
         getEl('create-chart-button').addEventListener('click', () => getEl('chart-creator-modal').style.display = 'flex');
         getEl('chart-creator-cancel').addEventListener('click', () => getEl('chart-creator-modal').style.display = 'none');
-        // ... chart generation logic
+        getEl('chart-display-close').addEventListener('click', () => getEl('chart-display-modal').style.display = 'none');
+        getEl('chart-creator-generate').addEventListener('click', () => {
+            const groupBy = getEl('group-by-select').value; const metric = getEl('metric-select').value; const chartType = getEl('chart-type-select').value;
+            if (!groupBy || !metric || groupBy === 'all' || metric === 'all') return;
+            const groupedData = currentFilteredData.reduce((acc, item) => { const key = item[groupBy] || 'N/A'; if (!acc[key]) acc[key] = 0; acc[key] += item[metric]; return acc; }, {});
+            const chartData = { labels: Object.keys(groupedData), data: Object.values(groupedData), metricLabel: METRIC_FIELDS.find(f => f.key === metric).label };
+            const title = `${METRIC_FIELDS.find(f => f.key === metric).label} by ${GROUPABLE_FIELDS.find(f => f.key === groupBy).label}`;
+            renderCustomChart(chartData, chartType, title);
+            getEl('chart-creator-modal').style.display = 'none';
+        });
 
-        getEl('reset-filters').addEventListener('click', () => { /* ... full reset logic ... */ applyFilters(); });
-        
-        // Listeners for save list modals
+        getEl('reset-filters').addEventListener('click', () => {
+            document.querySelectorAll('#filters-tab-content .filter-input').forEach(i => i.value = '');
+            document.querySelectorAll('.modal-body input[type="checkbox"]').forEach(c => c.checked = false);
+            document.querySelectorAll('.filter-multiselect-button').forEach(b => {
+                b.classList.remove('active');
+                const defaultText = b.id.replace(/-/g, ' ').replace('filter button', '').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+                b.textContent = defaultText;
+            });
+            applyFilters();
+        });
+
         const saveWarehouseBtn = getEl('save-warehouse-btn');
         const saveMailingListBtn = getEl('save-mailing-list-btn');
         const saveListModal = getEl('save-list-modal');
-        // ... full save list logic from previous version
+        const saveListModalTitle = getEl('save-list-modal-title');
+        const saveListCount = getEl('save-list-count');
+        const saveListType = getEl('save-list-type');
+        const listNameInput = getEl('list-name-input');
+        const saveListCancelBtn = getEl('save-list-cancel-btn');
+        const saveListSaveBtn = getEl('save-list-save-btn');
+        let currentListType = '';
+        const openSaveListModal = (type) => {
+            currentListType = type;
+            saveListModalTitle.textContent = `Save as ${type}`;
+            saveListType.textContent = type.toLowerCase();
+            saveListCount.textContent = currentFilteredData.length.toLocaleString();
+            listNameInput.value = '';
+            saveListModal.style.display = 'flex';
+            listNameInput.focus();
+        };
+        const closeSaveListModal = () => saveListModal.style.display = 'none';
+        saveWarehouseBtn.addEventListener('click', () => openSaveListModal('Warehouse'));
+        saveMailingListBtn.addEventListener('click', () => openSaveListModal('Mailing List'));
+        saveListCancelBtn.addEventListener('click', closeSaveListModal);
+        saveListModal.addEventListener('click', (e) => { if (e.target === saveListModal) closeSaveListModal(); });
+        saveListSaveBtn.addEventListener('click', () => {
+            const listName = listNameInput.value.trim();
+            if (!listName) return;
+            console.log(`Saving ${currentListType} as "${listName}" with ${currentFilteredData.length} records.`);
+            closeSaveListModal();
+        });
 
-        // Initial render
-        applyFilters();
+        applyFilters(); 
     };
     
     // --- FINAL INITIALIZATION CALL ---
