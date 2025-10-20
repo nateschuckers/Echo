@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Management</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Custom Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply a base font for consistent styling */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <script>
+        // This script checks the parent window's theme and applies it to the iframe
+        // to ensure consistent dark/light mode styling.
+        try {
+            const theme = window.parent.localStorage.getItem('andar-mode') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        } catch (error) {
+            console.error("Could not access parent theme:", error);
+        }
+    </script>
+</head>
+<body>
+    <!-- The React application will be rendered inside this div -->
+    <div id="root"></div>
+
+    <!-- The application logic is now in an external file -->
+    <script type="text/babel" src="grant_management.js"></script>
+</body>
+</html>

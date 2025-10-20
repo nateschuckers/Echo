@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles for the carousel */
+        .carousel-slide {
+            display: none;
+            animation: fade 1.5s ease-in-out;
+        }
+        @keyframes fade {
+            from { opacity: .4 }
+            to { opacity: 1 }
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+        .carousel-dots .dot {
+            transition: background-color 0.3s ease;
+        }
+    </style>
+    <script>
+        // Theme and mode loader for iframe content
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = window.parent.localStorage.getItem('andar-theme') || 'theme-blue';
+            const savedMode = window.parent.localStorage.getItem('andar-mode') || 'light';
+            document.documentElement.className = savedMode;
+            document.body.classList.add(savedTheme);
+        });
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div class="container mx-auto p-6 lg:p-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200 flex items-center">
+                <i class="fa-solid fa-house-chimney mr-3 text-primary"></i>
+                Welcome to Andar Echo
+            </h1>
+        </header>
+
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <!-- What's New Carousel Section -->
+            <div id="whats-new-carousel" class="relative overflow-hidden rounded-lg">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div class="p-4">
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">New United Way Branding</h2>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                    United Way Worldwide has updated their branding standards, and so have we! We're really happy to have worked directly with UWW to develop a new Look and Feel Template to install for all your eCommunity webpages. Documentation to add a new template is in our support center, and all instructions for every template, including any necessary coding, are built right into the template builder itself.
+                                </p>
+                            </div>
+                            <img src="https://placehold.co/600x400/6b7280/ffffff?text=Feature+1" alt="New United Way Branding" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div class="p-4">
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">New Dashboard Installer</h2>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                    Dashboards and Biotabs are incredibly powerful tools. To make it even easier to get everything you need at your fingertips, we've added the ability to install Dashboards and Biotabs right from your Andar 360 application. You can use the link below, or just navigate to the Biotabs and Dashboards Maintenance menu item and click the "Install from Andar" button.
+                                </p>
+                            </div>
+                            <img src="https://placehold.co/600x400/6b7280/ffffff?text=Feature+2" alt="New Dashboard Installer" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div class="p-4">
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Tribute Gifts</h2>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                    Does your site use a survey to gather "in honor of" or "in memory of" pledges? If so, we've got exciting news! We have implemented Tribute Gifts, which allows your donors to automatically create a gift relationship, while they're pledging, directly in ePledge. Adding a Tribute Gift will create the appropriate gift relationship, and allow you to match it to an existing account in Andar.
+                                </p>
+                            </div>
+                           <img src="https://placehold.co/600x400/6b7280/ffffff?text=Feature+3" alt="Tribute Gifts" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                    </div>
+                     <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div class="p-4">
+                                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">e-Volunteer Enhancements</h2>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                   We've been busy enhancing our Volunteer Management and e-Volunteer module! Some of the enhancements included in this Service Pack include: automated volunteer hour assignment, a new mechanism for tracking the value of volunteer hours, self-reporting of hours for opportunities not in Andar, a host of new dashboard apps, and reporting improvements.
+                                </p>
+                            </div>
+                           <img src="https://placehold.co/600x400/6b7280/ffffff?text=Feature+4" alt="e-Volunteer Enhancements" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                    <!-- Dots will be generated by JS -->
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200 dark:border-gray-700">
+
+            <!-- Links Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-3">Products & Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-primary hover:underline">Andar/360</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Cloud Hosting</a></li>
+                        <li><a href="#" class="text-primary hover:underline">IT Managed Services</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Consulting Services</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Peer-to-Peer Fundraising</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-3">Learn</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-primary hover:underline">Philanthropy Pulse - Blog</a></li>
+                        <li><a href="#" class="text-primary hover:underline">e-Classes</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Drop-In Sessions</a></li>
+                        <li><a href="#" class="text-primary hover:underline">2025 User Group Conference</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Andar User Community</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Training</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Guide to Cloud Hosting</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-3">Customer Support</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                        <li><a href="#" class="text-primary hover:underline">Freshdesk - Help Desk</a></li>
+                        <li><a href="#" class="text-primary hover:underline">Self-Service Support Center</a></li>
+                        <li>1 (877) 479-3780</li>
+                        <li><a href="mailto:andarsupport@andarsoftware.com" class="text-primary hover:underline">andarsupport@andarsoftware.com</a></li>
+                        <li><a href="mailto:hostingsupport@andarsoftware.com" class="text-primary hover:underline">hostingsupport@andarsoftware.com</a></li>
+                        <li><a href="mailto:enterprisesupport@andarsoftware.com" class="text-primary hover:underline">enterprisesupport@andarsoftware.com</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
+            © 2025 Andar Software Ltd. All Rights Reserved.
+        </footer>
+    </div>
+    <script src="homepage.js"></script>
+</body>
+</html>

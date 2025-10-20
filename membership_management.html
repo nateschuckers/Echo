@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = window.parent.localStorage.getItem('andar-theme') || 'theme-blue';
+            const savedMode = window.parent.localStorage.getItem('andar-mode') || 'dark';
+            document.documentElement.className = savedMode;
+            document.body.classList.add(savedTheme);
+        });
+    </script>
+    <style>
+        body { background-color: #111827; /* bg-gray-900 */ }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="app" class="container mx-auto p-6"></div>
+    <script src="membership_management.js" type="module"></script>
+</body>
+</html>

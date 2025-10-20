@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advocacy Hub</title>
+    <!-- External Libraries & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- React & Babel for in-browser JSX transpilation -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Make Firebase functions globally available for the React component
+        window.firebaseSDK = {
+            initializeApp,
+            getAuth,
+            signInAnonymously,
+            onAuthStateChanged,
+            getFirestore,
+            collection,
+            addDoc,
+            onSnapshot,
+            doc,
+            setDoc,
+            getDocs,
+            query
+        };
+    </script>
+
+    <script>
+        // Theme and mode loader to sync with the main application
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = window.parent.localStorage.getItem('andar-theme') || 'theme-blue';
+            const savedMode = window.parent.localStorage.getItem('andar-mode') || 'dark';
+            document.documentElement.className = savedMode; 
+            document.body.classList.add(savedTheme);
+        });
+    </script>
+    <style>
+        /* Ensure the body of the iframe matches the component's dark background */
+        body {
+            background-color: #111827; /* bg-gray-900 */
+        }
+    </style>
+</head>
+<body>
+    <!-- The root element where the React application will be mounted -->
+    <div id="root"></div>
+
+    <!-- Load the React component script, ensuring Babel transpiles it -->
+    <script src="advocacy_hub.js" type="text/babel" defer></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andar Echo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <div id="app-container" class="flex h-screen relative">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-full fixed top-0 left-0 z-40 transition-all duration-300 ease-in-out flex flex-col">
+            <!-- Logo and App Name -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 h-16">
+                <div class="flex items-center space-x-3 overflow-hidden">
+                    <svg class="w-8 h-8 text-primary shrink-0" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 15.25c3.67 0 6.75-2.015 6.75-4.5S9.67 6.25 6 6.25v1.5c2.835 0 5.25 1.57 5.25 3s-2.415 3-5.25 3v1.5z"/>
+                        <path d="M6 12.5c2.07 0 3.75-.9 3.75-2s-1.68-2-3.75-2v1.5c1.245 0 2.25.45 2.25 1s-1.005 1-2.25 1v-1.5z"/>
+                        <path d="M6 9h1v6H6V9z"/>
+                    </svg>
+                    <span id="app-name" class="font-bold text-xl whitespace-nowrap">Echo</span>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex flex-col justify-start px-2 py-4 space-y-2 mt-8 overflow-y-auto">
+                <a href="homepage.html" class="menu-item active">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="menu-text">Home</span>
+                </a>
+                <a href="dashboard.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 14l-4-4-4 4"></path></svg>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+                <a href="communications.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <span class="menu-text">Communications Hub</span>
+                </a>
+                <a href="donor_search.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span class="menu-text">Account Search</span>
+                </a>
+                <a href="engagement_hub.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="menu-text">Engagement Hub</span>
+                </a>
+                <a href="reporting.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <span class="menu-text">Reporting</span>
+                </a>
+                <div class="px-2 pt-4 pb-2">
+                    <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                </div>
+                <a href="advocacy_hub.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    <span class="menu-text">Advocacy Hub</span>
+                </a>
+                <a href="giving_forecaster.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <span class="menu-text">Giving Forecaster</span>
+                </a>
+                <a href="grant_management.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="menu-text">Grant Management</span>
+                </a>
+                 <a href="drive_hub.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span class="menu-text">Drive Hub</span>
+                </a>
+                <a href="membership_management.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"></path></svg>
+                    <span class="menu-text">Membership Management</span>
+                </a>
+                <a href="giving_hub.html" class="menu-item">
+                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+                    <span class="menu-text">P2P Hub</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 flex flex-col transition-all duration-300 ease-in-out bg-gray-100 dark:bg-gray-900">
+            <!-- Top Bar -->
+            <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-6 z-30 shrink-0">
+                <h1 id="page-title" class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Home</h1>
+                <!-- Profile and Settings -->
+                <div class="relative">
+                    <button id="profile-button" class="flex items-center space-x-2">
+                        <img src="https://placehold.co/40x40/6b7280/ffffff?text=AD" alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary">
+                        <span class="hidden md:inline font-semibold">Alex Doe</span>
+                        <svg class="w-5 h-5 text-gray-500 hidden md:inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                    </button>
+                    <!-- Profile Dropdown -->
+                    <div id="profile-dropdown" class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden hidden z-50 border border-gray-200 dark:border-gray-700">
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                            <p class="font-semibold">Alex Doe</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">alex.doe@example.com</p>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <!-- Dark Mode Toggle -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Appearance</label>
+                                <div class="mt-2 flex items-center justify-between bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                    <button id="light-mode-btn" class="w-full text-center py-1.5 rounded-md text-sm">Light</button>
+                                    <button id="dark-mode-btn" class="w-full text-center py-1.5 rounded-md text-sm">Dark</button>
+                                </div>
+                            </div>
+                            <!-- Theme Colors -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Theme Color</label>
+                                <div class="mt-2 grid grid-cols-4 gap-2">
+                                    <button class="theme-dot theme-blue" data-theme="theme-blue"></button>
+                                    <button class="theme-dot theme-green" data-theme="theme-green"></button>
+                                    <button class="theme-dot theme-purple" data-theme="theme-purple"></button>
+                                    <button class="theme-dot theme-orange" data-theme="theme-orange"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="block w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Log Out</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 p-6 overflow-y-auto">
+               <iframe id="content-frame" src="homepage.html" class="w-full h-full border-0"></iframe>
+            </main>
+        </div>
+        
+        <!-- Collapse/Expand Toggle Button -->
+        <button id="sidebar-toggle" class="absolute top-12 z-50 flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-md border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out">
+            <svg id="collapse-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            <svg id="expand-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <!-- Modal Container -->
+        <div id="app-modal" class="fixed inset-0 bg-black bg-opacity-60 z-[60] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+            <div id="modal-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg relative transform transition-transform duration-300 scale-95">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 id="modal-title" class="text-lg font-semibold">Modal Title</h3>
+                    <button id="modal-close-btn" class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <!-- Modal Body -->
+                <div id="modal-body" class="p-6">
+                    <!-- Dynamic content goes here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+	<!-- This line loads and activates the Live Story Assistant -->
+	<script src="story-assistant.js"></script>
+</body>
+</html>
+

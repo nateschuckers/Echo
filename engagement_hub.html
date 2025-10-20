@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engagement Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-gray-200 p-6">
+    <div class="space-y-6">
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="stat-card">
+                <div class="flex-1 text-center">
+                    <p class="text-3xl font-bold" id="total-events">0</p>
+                    <p class="text-sm text-gray-400">Total Events</p>
+                </div>
+                <i class="fa-solid fa-calendar-alt text-3xl text-blue-500 ml-4"></i>
+            </div>
+            <div class="stat-card">
+                <div class="flex-1 text-center">
+                    <p class="text-3xl font-bold" id="total-attendees">0</p>
+                    <p class="text-sm text-gray-400">Event Attendees</p>
+                </div>
+                <i class="fa-solid fa-ticket text-3xl text-purple-500 ml-4"></i>
+            </div>
+            <div class="stat-card">
+                <div class="flex-1 text-center">
+                    <p class="text-3xl font-bold" id="total-volunteers">0</p>
+                    <p class="text-sm text-gray-400">Volunteers</p>
+                </div>
+                <i class="fa-solid fa-hands-helping text-3xl text-green-500 ml-4"></i>
+            </div>
+            <div class="stat-card">
+                <div class="flex-1 text-center">
+                    <p class="text-3xl font-bold" id="total-hours">0</p>
+                    <p class="text-sm text-gray-400">Volunteer Hours</p>
+                </div>
+                <i class="fa-solid fa-clock text-3xl text-orange-500 ml-4"></i>
+            </div>
+            <div class="stat-card">
+                <div class="flex-1 text-center">
+                    <p class="text-3xl font-bold" id="value-of-hours">$0</p>
+                    <p class="text-sm text-gray-400">Value of Volunteering</p>
+                </div>
+                <i class="fa-solid fa-dollar-sign text-3xl text-primary ml-4"></i>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative">
+            <input type="text" id="engagement-search" placeholder="Search events and opportunities by name..." class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Upcoming Events -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Upcoming Events</h3>
+                    <button class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-plus mr-2"></i>Add Event
+                    </button>
+                </div>
+                <div id="events-list-container" class="engagement-list-container">
+                    <!-- Dynamic content will be injected here -->
+                </div>
+            </div>
+            <!-- Volunteer Opportunities -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Volunteer Opportunities</h3>
+                    <button class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-plus mr-2"></i>Add Opportunity
+                    </button>
+                </div>
+                <div id="opportunities-list-container" class="engagement-list-container">
+                   <!-- Dynamic content will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="engagement_hub.js"></script>
+</body>
+</html>

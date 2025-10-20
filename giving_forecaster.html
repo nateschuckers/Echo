@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giving Forecaster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+    
+    <script>
+        // Theme and mode loader for iframe content
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = window.parent.localStorage.getItem('andar-theme') || 'theme-blue';
+            const savedMode = window.parent.localStorage.getItem('andar-mode') || 'light';
+            document.documentElement.className = savedMode;
+            document.body.classList.add(savedTheme);
+        });
+    </script>
+</head>
+<body class="bg-gray-900 text-gray-200 p-6">
+    <div id="forecaster-app-container">
+        <!-- App content will be injected here -->
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl relative border border-gray-700">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-200 flex items-center"><i class="fa-solid fa-sliders mr-3"></i>Scoring Model Weights</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <form id="settings-form">
+                <div class="p-6 max-h-[60vh] overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Major Gift Potential -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-primary">Major Gift Potential</h4>
+                            <div class="setting-item">
+                                <label for="mg-large-payment" class="text-sm font-medium text-gray-300">Large Payment</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="30" name="majorGift.largePaymentWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">30</span>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label for="mg-total-payment" class="text-sm font-medium text-gray-300">High Total Giving</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="20" name="majorGift.highTotalPaymentWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">20</span>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label for="mg-pledge-fulfillment" class="text-sm font-medium text-gray-300">Pledge Fulfillment</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="15" name="majorGift.pledgeFulfillmentWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">15</span>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label for="mg-external-giving" class="text-sm font-medium text-gray-300">External Giving</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="15" name="majorGift.externalGivingWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">15</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label for="mg-email-engagement" class="text-sm font-medium text-gray-300">Email Engagement</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="10" name="majorGift.emailEngagementWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">10</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label for="mg-moves-management" class="text-sm font-medium text-gray-300">Moves Management</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="5" name="majorGift.movesManagementWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">5</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label for="mg-mission-alignment" class="text-sm font-medium text-gray-300">Mission Alignment (Co.)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="40" name="majorGift.missionAlignmentWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">40</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lapse Risk -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-red-400">Lapse Risk</h4>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Last Engagement</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="40" name="lapseRisk.lastEngagementWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">40</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Email Disengagement</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="30" name="lapseRisk.emailDisengagementWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">30</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Unfulfilled Pledges</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="20" name="lapseRisk.unfulfilledPledgeWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">20</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Low Survey Score</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="10" name="lapseRisk.lowSurveyScoreWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">10</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recurring Potential -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-yellow-400">Recurring Potential</h4>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Consistency</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="30" name="recurringPotential.consistencyWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">30</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Frequency</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="25" name="recurringPotential.frequencyWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">25</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Email Engagement</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="20" name="recurringPotential.emailEngagementWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">20</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">Volunteerism</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="15" name="recurringPotential.volunteerWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">15</span>
+                                </div>
+                            </div>
+                             <div class="setting-item">
+                                <label class="text-sm font-medium text-gray-300">"Sweet Spot" Giving</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" min="0" max="50" value="10" name="recurringPotential.sweetSpotWeight" class="w-full">
+                                    <span class="font-semibold text-gray-200 w-6 text-center">10</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
+                    <button type="button" id="reset-settings-btn" class="text-sm font-semibold text-gray-400 hover:text-white">Reset to Defaults</button>
+                    <div class="flex gap-4">
+                        <button type="button" id="cancel-settings-btn" class="px-4 py-2 rounded-md text-sm font-semibold bg-gray-600 hover:bg-gray-500 text-white">Cancel</button>
+                        <button type="submit" class="px-4 py-2 rounded-md text-sm font-semibold bg-primary hover:bg-primary-hover text-primary-foreground">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="giving_forecaster.js"></script>
+</body>
+</html>

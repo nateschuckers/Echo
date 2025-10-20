@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="donor-search-content">
+        <div class="flex items-center justify-between mb-4">
+            <div class="relative flex-grow">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" id="search-input" placeholder="Search by name, phone, address, email..." class="w-full pl-10 pr-4 py-2 border border-gray-600 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary text-gray-200">
+            </div>
+            <div class="ml-4">
+                <button id="filter-toggle" class="px-4 py-2 border border-gray-600 rounded-md flex items-center space-x-2 hover:bg-gray-700 text-gray-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM3 16a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"></path></svg>
+                    <span id="filter-toggle-text">Show Filters</span>
+                </button>
+            </div>
+        </div>
+        <div id="filter-container" class="overflow-hidden transition-height" style="max-height: 0px;"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border border-gray-700 rounded-md bg-gray-800/50">
+            <div class="col-span-1 md:col-span-2 lg:col-span-4"><label class="block text-sm font-medium text-gray-300">Account Type</label><div id="account-type-filters" class="mt-1 flex rounded-md bg-gray-700 p-1"><button data-type="all" class="account-type-btn w-full text-center py-1 rounded-md bg-primary text-primary-foreground">All</button><button data-type="individual" class="account-type-btn w-full text-center py-1 rounded-md text-gray-200">Individuals</button><button data-type="organization" class="account-type-btn w-full text-center py-1 rounded-md text-gray-200">Organizations</button></div></div>
+            <div><label for="employer" class="block text-sm font-medium text-gray-300">Employer</label><input type="text" id="employer" class="filter-input mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md text-gray-200"></div>
+            <div><label for="contact-type" class="block text-sm font-medium text-gray-300">Contact Type</label><select id="contact-type" class="filter-input mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md text-gray-200"><option>All</option><option>Primary</option><option>Spouse</option></select></div>
+            <div><label for="affinity-group" class="block text-sm font-medium text-gray-300">Affinity Group</label><select id="affinity-group" class="filter-input mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md text-gray-200"><option>All</option><option>Young Leaders</option><option>Women United</option></select></div>
+            <div><label for="leadership-level" class="block text-sm font-medium text-gray-300">Leadership Level</label><select id="leadership-level" class="filter-input mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md text-gray-200"><option>All</option><option>Patron's Circle</option><option>Benefactor's Circle</option><option>Director's Circle</option></select></div>
+            <div><label for="tag" class="block text-sm font-medium text-gray-300">Tag</label><select id="tag" class="filter-input mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md text-gray-200"><option>All</option><option>Board Member</option><option>Major Donor</option><option>Volunteer</option></select></div>
+        </div></div>
+        <div class="flex justify-between items-center mb-4">
+            <p id="results-count" class="text-sm text-gray-400">Showing 6 of 6 results.</p>
+            <div class="flex rounded-md border border-gray-600">
+                <button id="grid-view-btn" class="p-2 rounded-l-md bg-primary text-primary-foreground"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg></button>
+                <button id="list-view-btn" class="p-2 rounded-r-md text-gray-200"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></button>
+            </div>
+        </div>
+        <div id="no-results-message" class="hidden text-center py-12">
+            <i class="fa-solid fa-cloud-moon text-6xl text-gray-400 mb-4"></i>
+            <p class="text-xl font-semibold text-gray-300">No accounts found.</p>
+            <p class="text-gray-400">Try adjusting your search or filters.</p>
+        </div>
+        <div id="accounts-container">
+            <!-- Account Cards will be dynamically generated -->
+        </div>
+    </div>
+    <script src="donor_search.js"></script>
+</body>
+</html>

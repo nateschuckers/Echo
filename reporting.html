@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* --- Base Styles --- */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        /* --- Top Navigation --- */
+        .top-nav {
+            border-bottom: 1px solid #374151;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-bottom: 3px solid transparent;
+            color: #9ca3af;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #e5e7eb;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .nav-link.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        /* --- Report Page & Cards --- */
+        .report-page { display: none; }
+        .report-page.active { display: block; }
+        .report-card {
+            background-color: #1f2937;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+        .report-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #f3f4f6;
+        }
+        .report-card p {
+            color: #9ca3af;
+            margin-top: 0.5rem;
+            flex-grow: 1;
+        }
+        .run-report-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .run-report-btn:hover { background-color: var(--primary-hover); }
+
+        /* --- Report Options Drawer --- */
+        #drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #drawer-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #report-options-drawer {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            max-width: 42rem; /* Increased width for more complex options */
+            background-color: #1f2937;
+            border-left: 1px solid #374151;
+            z-index: 50;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        #report-options-drawer.active { transform: translateX(0); }
+        .drawer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .drawer-header h3 { font-size: 1.25rem; font-weight: 700; color: #f9fafb; }
+        #close-drawer-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.75rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.5rem;
+        }
+        #close-drawer-btn:hover { color: #f9fafb; }
+        .drawer-content { padding: 1.5rem; overflow-y: auto; flex-grow: 1; }
+        .drawer-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #374151;
+            background-color: #111827;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        /* --- Stepper Tabs in Drawer --- */
+        .stepper {
+            display: flex;
+            border-bottom: 1px solid #374151;
+            margin-bottom: 1.5rem;
+        }
+        .step {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            color: #9ca3af;
+            position: relative;
+            font-weight: 500;
+        }
+        .step.active {
+            color: var(--primary-color);
+        }
+        .step.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        .report-options-content { display: none; }
+
+        /* --- Accordion for Grouping Options --- */
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #374151;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .accordion-header h4 { font-weight: 600; color: #f3f4f6; }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            border-left: 2px solid #374151;
+            margin-left: 0.75rem;
+        }
+        .accordion-content.open { max-height: 1000px; /* Large value to allow for content */ }
+        .accordion-icon { transition: transform 0.3s; }
+        .accordion-icon.open { transform: rotate(180deg); }
+
+
+        /* --- General Component Styling --- */
+        .input-group { margin-bottom: 1rem; }
+        .input-label { display: block; color: #d1d5db; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .filter-input, .styled-select {
+            width: 100%;
+            background-color: #1f2937;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .filter-input::placeholder { color: #6b7280; }
+        .radio-group label { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .radio-group input { accent-color: var(--primary-color); margin-right: 0.5rem; }
+
+        .filter-multiselect-button {
+            width: 100%; background-color: #374151; padding: 0.5rem 0.75rem; border-radius: 0.5rem;
+            text-align: left; color: #d1d5db; font-weight: 500;
+        }
+        .filter-multiselect-button.active { background-color: var(--primary-color); color: white; }
+        .filter-toggle-button {
+            display: flex; justify-content: space-between; width: 100%;
+            font-weight: 600; color: #e5e7eb; padding: 0.25rem 0;
+        }
+        .filter-section { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .filter-section.open { max-height: 500px; }
+        
+        .modal-button-primary {
+            background-color: var(--primary-color); color: white; padding: 0.625rem 1rem;
+            border-radius: 0.5rem; font-weight: 500; transition: background-color 0.2s;
+        }
+        .modal-button-primary:hover { background-color: var(--primary-hover); }
+        .modal-button-secondary {
+            background-color: #374151; color: #f3f4f6; padding: 0.625rem 1rem;
+            border-radius: 0.5rem; font-weight: 500; transition: background-color 0.2s;
+        }
+        .modal-button-secondary:hover { background-color: #4b5563; }
+        
+        /* --- Modal Styles --- */
+        .modal-backdrop {
+            display: none; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.7);
+            z-index: 50; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background-color: #1f2937; border-radius: 0.75rem; border: 1px solid #374151;
+            width: 90%; max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;
+        }
+        .modal-header { font-size: 1.125rem; font-weight: 600; padding: 1rem; border-bottom: 1px solid #374151; }
+        .modal-body {
+            padding: 1rem; overflow-y: auto; display: grid;
+            grid-template-columns: 1fr 1fr; gap: 0.75rem;
+        }
+        .checkbox-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+        .checkbox { accent-color: var(--primary-color); }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="flex flex-col h-screen">
+        <!-- Top Tab Navigation -->
+        <nav class="top-nav">
+            <ul class="flex" id="top-nav-menu">
+                <li><a href="#" class="nav-link active" data-target="build-a-report-page"><i class="fa-solid fa-wrench fa-fw mr-2"></i>Custom</a></li>
+                <li><a href="#" class="nav-link" data-target="campaign-reports-page"><i class="fa-solid fa-bullhorn fa-fw mr-2"></i>Campaign</a></li>
+                <li><a href="#" class="nav-link" data-target="donor-choice-reports-page"><i class="fa-solid fa-hand-holding-heart fa-fw mr-2"></i>Donor Choice</a></li>
+                <li><a href="#" class="nav-link" data-target="epledge-reports-page"><i class="fa-solid fa-file-invoice-dollar fa-fw mr-2"></i>ePledge</a></li>
+                <li><a href="#" class="nav-link" data-target="event-reports-page"><i class="fa-solid fa-calendar-check fa-fw mr-2"></i>Event</a></li>
+                <li><a href="#" class="nav-link" data-target="finance-reports-page"><i class="fa-solid fa-chart-line fa-fw mr-2"></i>Finance</a></li>
+                <li><a href="#" class="nav-link" data-target="general-reports-page"><i class="fa-solid fa-book fa-fw mr-2"></i>General</a></li>
+                <li><a href="#" class="nav-link" data-target="volunteer-reports-page"><i class="fa-solid fa-users fa-fw mr-2"></i>Volunteer</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div id="main-content" class="p-6 flex-grow overflow-y-auto">
+             <!-- Custom Report Builder Page -->
+            <div id="build-a-report-page" class="report-page active h-full">
+                 <div class="flex space-x-6 h-full">
+                    <aside id="reporting-sidebar" class="bg-gray-800 w-80 p-6 rounded-xl flex flex-col flex-shrink-0 transition-all duration-300 relative border border-gray-700">
+                         <button id="sidebar-toggle" class="absolute -right-4 top-8 text-gray-400 hover:text-primary bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center border-2 border-gray-900">
+                            <svg id="collapse-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+                            <svg id="expand-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                        </button>
+                        <div id="sidebar-content" class="flex flex-col h-full overflow-y-auto pr-2">
+                            <h3 class="text-xl font-bold mb-4">Filters</h3>
+                            <div class="space-y-4 flex-grow">
+                                <div class="border-t border-gray-700 pt-4">
+                                    <button class="filter-toggle-button" data-target="gift-filters"><span>Gift</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                    <div id="gift-filters" class="filter-section open space-y-2 pt-2">
+                                        <input type="number" id="min-amount-filter" placeholder="Min Amount" class="filter-input">
+                                        <input type="number" id="max-amount-filter" placeholder="Max Amount" class="filter-input">
+                                        <button id="pledge-filter-button" class="filter-multiselect-button">All Pledge Statuses</button>
+                                        <button id="churn-filter-button" class="filter-multiselect-button">All Churn Statuses</button>
+                                        <button id="gift-type-filter-button" class="filter-multiselect-button">All Gift Types</button>
+                                        <button id="campaign-year-filter-button" class="filter-multiselect-button">All Campaign Years</button>
+                                        <button id="campaign-type-filter-button" class="filter-multiselect-button">All Campaign Types</button>
+                                        <button id="payment-type-filter-button" class="filter-multiselect-button">All Payment Types</button>
+                                    </div>
+                                </div>
+                                <div class="border-t border-gray-700 pt-4">
+                                    <button class="filter-toggle-button" data-target="role-filters"><span>Role</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                    <div id="role-filters" class="filter-section space-y-2 pt-2 open">
+                                         <button id="role-filter-button" class="filter-multiselect-button">All Roles</button>
+                                    </div>
+                                </div>
+                                <div class="border-t border-gray-700 pt-4">
+                                    <button class="filter-toggle-button" data-target="event-attendance-filters"><span>Event Attendance</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                    <div id="event-attendance-filters" class="filter-section space-y-2 pt-2">
+                                        <input type="number" id="min-total-events-filter" placeholder="Min Events Attended" class="filter-input">
+                                        <input type="number" id="max-total-events-filter" placeholder="Max Events Attended" class="filter-input">
+                                        <button id="event-filter-button" class="filter-multiselect-button">Any Event</button>
+                                    </div>
+                                </div>
+                                <div class="border-t border-gray-700 pt-4">
+                                    <button class="filter-toggle-button" data-target="volunteering-filters"><span>Volunteering</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                    <div id="volunteering-filters" class="filter-section space-y-2 pt-2">
+                                        <input type="number" id="min-volunteer-events-filter" placeholder="Min Opps Attended" class="filter-input">
+                                        <input type="number" id="max-volunteer-events-filter" placeholder="Max Opps Attended" class="filter-input">
+                                        <button id="opportunity-filter-button" class="filter-multiselect-button">Any Opportunity</button>
+                                    </div>
+                                </div>
+                                <div class="border-t border-gray-700 pt-4">
+                                    <button class="filter-toggle-button" data-target="workplace-filters"><span>Workplace</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                    <div id="workplace-filters" class="filter-section space-y-2 pt-2">
+                                        <button id="workplace-filter-button" class="filter-multiselect-button">All Workplaces</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-700">
+                                <button id="reset-filters" class="w-full mt-2 p-2 bg-red-600/80 text-white rounded-md hover:bg-red-600 transition-all text-sm font-semibold">Reset All Filters</button>
+                            </div>
+                        </div>
+                    </aside>
+                    <main class="flex-1 bg-gray-800 p-6 rounded-xl flex flex-col border border-gray-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">Filtered Results (<span id="results-count">0</span>)</h3>
+                            <div class="flex items-center gap-2">
+                                <button id="select-fields-button" class="modal-button-secondary"><i class="fa-solid fa-columns mr-2"></i>Manage Columns</button>
+                                <button id="create-chart-button" class="modal-button-primary"><i class="fa-solid fa-chart-pie mr-2"></i>Create Chart</button>
+                            </div>
+                        </div>
+                        <div class="overflow-auto flex-grow">
+                            <table class="min-w-full divide-y divide-gray-700">
+                                <thead id="data-table-head" class="bg-gray-900/50 sticky top-0"></thead>
+                                <tbody id="data-table-body" class="divide-y divide-gray-700"></tbody>
+                            </table>
+                        </div>
+                    </main>
+                </div>
+            </div>
+
+            <!-- Campaign Reports Page -->
+            <div id="campaign-reports-page" class="report-page">
+                <h2 class="text-2xl font-bold mb-6 text-white">Campaign</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="report-card">
+                        <h3>Monitoring Report</h3>
+                        <p>A detailed analysis of campaign progress, structure, and performance over time.</p>
+                        <button class="run-report-btn" data-report-title="Monitoring Report" data-report-type="monitoring">Configure & Run</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>Individual Giving Report</h3>
+                        <p>Analyzes individual donor contributions, gift ranges, and giving patterns.</p>
+                        <button class="run-report-btn" data-report-title="Individual Giving Report" data-report-type="individualGiving">Configure & Run</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>LYBUNT & SYBUNT</h3>
+                        <p>Identify donors who gave Last Year But Unfortunately Not This year, and Some Year But...</p>
+                        <button class="run-report-btn" data-report-title="LYBUNT & SYBUNT Analysis" data-report-type="lybunt">Configure & Run</button>
+                    </div>
+                     <div class="report-card">
+                        <h3>Pledge Analysis</h3>
+                        <p>Detailed breakdown of pledges made, payments received, and outstanding balances.</p>
+                        <button class="run-report-btn" data-report-title="Pledge Analysis" data-report-type="pledge">Configure & Run</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="donor-choice-reports-page" class="report-page"><h2 class="text-2xl font-bold text-white">Donor Choice</h2><p class="text-gray-400 mt-4">Reports related to donor designations and choices will appear here.</p></div>
+            <div id="epledge-reports-page" class="report-page"><h2 class="text-2xl font-bold text-white">ePledge</h2><p class="text-gray-400 mt-4">Reports for online pledging campaigns and statuses will be available here.</p></div>
+            <div id="event-reports-page" class="report-page"><h2 class="text-2xl font-bold text-white">Event</h2><p class="text-gray-400 mt-4">Attendee lists, revenue summaries, and other event-specific reports.</p></div>
+            <div id="finance-reports-page" class="report-page">
+                 <h2 class="text-2xl font-bold mb-6 text-white">Finance</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="report-card">
+                        <h3>AR Trial Balance Report</h3>
+                        <p>Provides a detailed or summary view of accounts receivable balances for reconciliation.</p>
+                        <button class="run-report-btn" data-report-title="AR Trial Balance Report" data-report-type="arTrialBalance">Configure & Run</button>
+                    </div>
+                </div>
+            </div>
+            <div id="general-reports-page" class="report-page"><h2 class="text-2xl font-bold text-white">General</h2><p class="text-gray-400 mt-4">A collection of general-purpose and miscellaneous reports.</p></div>
+            <div id="volunteer-reports-page" class="report-page"><h2 class="text-2xl font-bold text-white">Volunteer</h2><p class="text-gray-400 mt-4">Reports on volunteer hours, opportunities, and engagement.</p></div>
+
+        </div>
+    </div>
+    
+    <!-- Modals (from original design) -->
+    <div id="role-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Roles</h3><div id="role-checkboxes" class="modal-body"></div><div class="p-2"><label class="flex items-center space-x-2 text-sm"><input type="radio" name="role-logic" value="or" checked><span>Match ANY</span></label><label class="flex items-center space-x-2 text-sm"><input type="radio" name="role-logic" value="and"><span>Match ALL</span></label></div><button id="role-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="workplace-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Workplaces</h3><div id="workplace-checkboxes" class="modal-body"></div><button id="workplace-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="opportunity-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Volunteer Opportunities</h3><div id="opportunity-checkboxes" class="modal-body"></div><button id="opportunity-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="event-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Events</h3><div id="event-checkboxes" class="modal-body"></div><button id="event-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="fields-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Display Fields</h3><div id="fields-checkboxes" class="modal-body"></div><button id="fields-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="pledge-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Pledge Status</h3><div id="pledge-checkboxes" class="modal-body"></div><button id="pledge-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="churn-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Churn Status</h3><div id="churn-checkboxes" class="modal-body"></div><button id="churn-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="gift-type-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Gift Types</h3><div id="gift-type-checkboxes" class="modal-body"></div><button id="gift-type-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="campaign-year-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Years</h3><div id="campaign-year-checkboxes" class="modal-body"></div><button id="campaign-year-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="campaign-type-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Types</h3><div id="campaign-type-checkboxes" class="modal-body"></div><button id="campaign-type-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="payment-type-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Payment Types</h3><div id="payment-type-checkboxes" class="modal-body"></div><button id="payment-type-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+    <div id="chart-creator-modal" class="modal-backdrop"><div class="modal-content w-full max-w-md"><h3 class="modal-header">Create a Chart</h3><div class="p-4 space-y-4"><div><label class="font-semibold">Group By</label><select id="group-by-select" class="filter-input mt-1"></select></div><div><label class="font-semibold">Metric</label><select id="metric-select" class="filter-input mt-1"></select></div><div><label class="font-semibold">Chart Type</label><select id="chart-type-select" class="filter-input mt-1"><option value="bar">Bar</option><option value="pie">Pie</option><option value="doughnut">Doughnut</option></select></div></div><div class="flex justify-end p-4 bg-gray-700/50 rounded-b-lg gap-2"><button id="chart-creator-cancel" class="modal-button-secondary">Cancel</button><button id="chart-creator-generate" class="modal-button-primary">Generate</button></div></div></div>
+    <div id="chart-display-modal" class="modal-backdrop"><div class="modal-content w-full max-w-3xl h-3/4 flex flex-col"><div class="flex justify-between items-center p-4 border-b border-gray-700"><h3 id="chart-display-title" class="modal-header p-0 border-none">Chart</h3><button id="chart-display-close" class="text-gray-400 hover:text-white text-2xl">&times;</button></div><div class="p-4 flex-grow relative"><canvas id="custom-chart-canvas"></canvas></div></div></div>
+    <div id="campaign-account-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Accounts</h3><div id="campaign-account-checkboxes" class="modal-body"></div><button id="campaign-account-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+
+    <!-- New Report Options Drawer -->
+    <div id="drawer-backdrop"></div>
+    <div id="report-options-drawer">
+        <div class="drawer-header">
+            <h3 id="drawer-title">Configure Report</h3>
+            <button id="close-drawer-btn">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <!-- Monitoring Report Options -->
+            <div id="monitoring-report-options" class="report-options-content">
+                <div class="stepper">
+                    <div class="step active" data-step="1">Selections</div>
+                    <div class="step" data-step="2">Formatting</div>
+                    <div class="step" data-step="3">Columns</div>
+                    <div class="step" data-step="4">System</div>
+                </div>
+                <div class="step-content-container space-y-4">
+                    <div class="step-content active" data-step-content="1">
+                        <div class="input-group">
+                            <label for="m-campaign-year" class="input-label">Campaign Year</label>
+                            <select id="m-campaign-year" class="styled-select"><option>Current Year (2025)</option><option>2024</option><option>2023</option></select>
+                        </div>
+                        <div class="input-group">
+                             <label class="input-label">Campaign Structure Node</label>
+                             <input type="text" class="filter-input" placeholder="Search for structure node...">
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Campaign</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="pt-4 space-y-4">
+                                    <label class="input-label">Campaigns</label>
+                                    <button class="filter-multiselect-button" data-modal-target="campaign-account-modal">All Campaigns (0)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-content" data-step-content="2"><p>Formatting Options...</p></div>
+                    <div class="step-content" data-step-content="3"><p>Column Options...</p></div>
+                    <div class="step-content scheduler-placeholder" data-step-content="4"></div>
+                </div>
+            </div>
+
+            <!-- Individual Giving Report Options -->
+            <div id="individualGiving-report-options" class="report-options-content">
+                <div class="stepper">
+                    <div class="step active" data-step="1">General</div>
+                    <div class="step" data-step="2">System</div>
+                </div>
+                <div class="step-content-container space-y-4">
+                    <div class="step-content active" data-step-content="1">
+                         <div class="input-group">
+                            <label for="ig-campaign-year" class="input-label">Campaign Year</label>
+                            <select id="ig-campaign-year" class="styled-select"><option>Current Year (2025)</option><option>2024</option><option>2023</option></select>
+                        </div>
+                         <div class="input-group">
+                            <label class="input-label">Campaign Account</label>
+                            <button class="filter-multiselect-button" data-modal-target="campaign-account-modal">All Campaigns (0)</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div class="input-group">
+                                <label class="input-label">Processing Account</label>
+                                <input type="text" class="filter-input" placeholder="Search...">
+                            </div>
+                             <div class="input-group">
+                                <label class="input-label">Fundraising Account</label>
+                                <input type="text" class="filter-input" placeholder="Search...">
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Additional Filters</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="pt-4 space-y-4 radio-group">
+                                   <label class="input-label">Report Option</label>
+                                   <label><input type="radio" name="report-option" checked> Summary Report</label>
+                                   <label><input type="radio" name="report-option"> Detailed Report</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-content scheduler-placeholder" data-step-content="2"></div>
+                </div>
+            </div>
+            
+            <!-- AR Trial Balance Report Options -->
+            <div id="arTrialBalance-report-options" class="report-options-content">
+                <div class="stepper">
+                    <div class="step active" data-step="1">General</div>
+                    <div class="step" data-step="2">Other options</div>
+                    <div class="step" data-step="3">System</div>
+                </div>
+                <div class="step-content-container space-y-4">
+                    <div class="step-content active" data-step-content="1">
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Giving Accounts</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="pt-4 space-y-4 radio-group">
+                                    <label><input type="radio" name="giving-accounts" checked> All Selected Accounts</label>
+                                    <label><input type="radio" name="giving-accounts"> Do Not Bill Accounts Only</label>
+                                    <label><input type="radio" name="giving-accounts"> Accounts with Transaction Type Balance Only</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Campaigns & Transactions</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="pt-4 space-y-4">
+                                    <label class="input-label">Select Campaigns</label>
+                                    <button class="filter-multiselect-button" data-modal-target="campaign-account-modal">No items selected</button>
+                                     <label class="input-label mt-4">Select Transaction Types</label>
+                                    <p class="text-gray-400 text-sm">...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-content" data-step-content="2">
+                        <div class="input-group">
+                            <label class="input-label">Sequence By</label>
+                            <select class="styled-select"><option>Account Name</option><option>Account Number</option></select>
+                        </div>
+                        <div class="input-group radio-group">
+                            <label class="input-label">Campaign Grouping</label>
+                            <label><input type="radio" name="grouping" checked> All in one report</label>
+                            <label><input type="radio" name="grouping"> Separate report for each campaign</label>
+                        </div>
+                    </div>
+                    <div class="step-content scheduler-placeholder" data-step-content="3"></div>
+                </div>
+            </div>
+
+             <!-- Placeholder for other reports like lybunt, pledge -->
+            <div id="lybunt-report-options" class="report-options-content"><div class="stepper"><div class="step active" data-step="1">General</div><div class="step" data-step="2">System</div></div><div class="step-content-container"><div class="step-content active" data-step-content="1"><p>Options for LYBUNT report...</p></div><div class="step-content scheduler-placeholder" data-step-content="2"></div></div></div>
+            <div id="pledge-report-options" class="report-options-content"><div class="stepper"><div class="step active" data-step="1">General</div><div class="step" data-step="2">System</div></div><div class="step-content-container"><div class="step-content active" data-step-content="1"><p>Options for Pledge Analysis report...</p></div><div class="step-content scheduler-placeholder" data-step-content="2"></div></div></div>
+        </div>
+        <div class="drawer-footer">
+            <button id="cancel-drawer-btn" class="modal-button-secondary">Cancel</button>
+            <button class="modal-button-primary">Run Report</button>
+        </div>
+    </div>
+
+    <script src="reporting.js"></script>
+</body>
+</html>
+
