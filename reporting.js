@@ -391,60 +391,329 @@ document.addEventListener('DOMContentLoaded', () => {
     previewModal.addEventListener('click', (e) => { if(e.target === previewModal) previewModal.style.display = 'none'});
 
 
-    // --- ORIGINAL REPORTING.JS LOGIC (for 'Build a Report' page) ---
-    let allData = [];
-    let currentFilteredData = [];
-    let customChart = null;
-    let selectedFields = ['name', 'role', 'donationAmount', 'pledgePaid', 'churnStatus'];
-    const USER_ROLES = ['Employee', 'Individual', 'Volunteer', 'Attendee'];
-    const WORKPLACES = ['TechCorp', 'HealthInc', 'EduGreat', 'FinanceLLC', 'RetailCo', 'No Workplace'];
-    const VOLUNTEER_OPPORTUNITIES = ['Annual Gala', 'Community Cleanup', 'Mentorship Program', 'Fundraising Drive'];
-    const EVENT_NAMES = ['Networking Night', 'Charity Auction', 'Webinar Series', 'Annual Conference'];
-    const CHURN_STATUSES = ['New', 'Increased', 'Flat', 'Decreased', 'Lapsed'];
-    const GIFT_TYPES = ['Individual', 'Employee'];
-    const CAMPAIGN_YEARS = [2023, 2024, 2025];
-    const PAYMENT_TYPES = ['Credit Card', 'Check', 'Bank Transfer'];
-    const PLEDGE_STATUSES = [{key: 'paid', label: 'Paid'}, {key: 'unpaid', label: 'Unpaid'}];
-    const ALL_FIELDS = [ { key: 'name', label: 'Name' }, { key: 'role', label: 'Role' }, { key: 'donationAmount', label: 'Donation' }, { key: 'workplace', label: 'Workplace' }, { key: 'pledgePaid', label: 'Pledge Status' }, { key: 'churnStatus', label: 'Churn Status' }, { key: 'pledgeAmount', label: 'Pledge Amount' }, { key: 'paymentAmount', label: 'Payment Amount' }, { key: 'address', label: 'Address' }, { key: 'email', label: 'Email Address' }, { key: 'phone', label: 'Phone Number' }, { key: 'volunteerHistory', label: 'Volunteer Events'}, { key: 'volunteerOppsAttended', label: 'Volunteer Opps Attended'}, { key: 'eventHistory', label: 'Event History'}, { key: 'eventsAttended', label: 'Total Events Attended'}, ];
-    const GROUPABLE_FIELDS = [ { key: 'churnStatus', label: 'Churn Status' }, { key: 'workplace', label: 'Workplace' }, { key: 'giftType', label: 'Gift Type'}, { key: 'campaignYear', label: 'Campaign Year'}, { key: 'campaignType', label: 'Campaign Type'}, { key: 'paymentType', label: 'Payment Type'} ];
-    const METRIC_FIELDS = [ { key: 'donationAmount', label: 'Sum of Donation Amount'}, { key: 'pledgeAmount', label: 'Sum of Pledge Amount'}, { key: 'paymentAmount', label: 'Sum of Payment Amount'}, { key: 'volunteerOppsAttended', label: 'Sum of Volunteer Opps'}, { key: 'eventsAttended', label: 'Sum of Total Events'} ];
-    
+    // --- [FIXED] ORIGINAL REPORTING.JS LOGIC (for 'Custom' page) ---
     const initializeBuilderPage = () => {
-        if (!getEl('reporting-sidebar')) return;
-        allData = [];
-        const generateData = (count) => { for (let i = 0; i < count; i++) { allData.push({ name: `User ${i}`, role: [USER_ROLES[i%4]], donationAmount: Math.floor(Math.random()*5000), pledgePaid: Math.random() > 0.3, churnStatus: CHURN_STATUSES[i%5]}); }};
-        generateData(5000);
+        // --- Guard clause to ensure this logic only runs on the Custom page ---
+        if (!getEl('reporting-sidebar')) {
+            return;
+        }
+
+        // --- STATE & CONSTANTS (scoped to this page) ---
+        let allData = [];
+        let currentFilteredData = [];
+        let customChart = null;
+        let selectedFields = ['name', 'role', 'donationAmount', 'pledgePaid', 'churnStatus'];
         
-        const renderTable = () => {
+        const USER_ROLES = ['Employee', 'Individual', 'Volunteer', 'Attendee'];
+        const WORKPLACES = ['TechCorp', 'HealthInc', 'EduGreat', 'FinanceLLC', 'RetailCo', 'No Workplace'];
+        const VOLUNTEER_OPPORTUNITIES = ['Annual Gala', 'Community Cleanup', 'Mentorship Program', 'Fundraising Drive'];
+        const EVENT_NAMES = ['Networking Night', 'Charity Auction', 'Webinar Series', 'Annual Conference'];
+        const CHURN_STATUSES = ['New', 'Increased', 'Flat', 'Decreased', 'Lapsed'];
+        const GIFT_TYPES = ['Individual', 'Employee'];
+        const CAMPAIGN_YEARS = [2023, 2024, 2025];
+        const CAMPAIGN_TYPES = ['Annual Giving', 'Capital Campaign', 'Special Event'];
+        const PAYMENT_TYPES = ['Credit Card', 'Check', 'Bank Transfer'];
+        const PLEDGE_STATUSES = [{key: 'paid', label: 'Paid'}, {key: 'unpaid', label: 'Unpaid'}];
+        const FIRST_NAMES = ['John', 'Jane', 'Alex', 'Emily', 'Chris', 'Katie', 'Michael', 'Sarah', 'David', 'Laura'];
+        const LAST_NAMES = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+        
+        const ALL_FIELDS = [
+            { key: 'name', label: 'Name' }, { key: 'role', label: 'Role' }, { key: 'donationAmount', label: 'Donation' },
+            { key: 'workplace', label: 'Workplace' }, { key: 'pledgePaid', label: 'Pledge Status' }, { key: 'churnStatus', label: 'Churn Status' },
+            { key: 'pledgeAmount', label: 'Pledge Amount' }, { key: 'paymentAmount', label: 'Payment Amount' }, { key: 'address', label: 'Address' },
+            { key: 'email', label: 'Email Address' }, { key: 'phone', label: 'Phone Number' },
+            { key: 'volunteerHistory', label: 'Volunteer Events'}, { key: 'volunteerOppsAttended', label: 'Volunteer Opps Attended'},
+            { key: 'eventHistory', label: 'Event History'}, { key: 'eventsAttended', label: 'Total Events Attended'},
+        ];
+        const GROUPABLE_FIELDS = [
+            { key: 'churnStatus', label: 'Churn Status' }, { key: 'workplace', label: 'Workplace' }, { key: 'giftType', label: 'Gift Type'},
+            { key: 'campaignYear', label: 'Campaign Year'}, { key: 'campaignType', label: 'Campaign Type'}, { key: 'paymentType', label: 'Payment Type'}
+        ];
+        const METRIC_FIELDS = [
+            { key: 'donationAmount', label: 'Sum of Donation Amount'}, { key: 'pledgeAmount', label: 'Sum of Pledge Amount'}, { key: 'paymentAmount', label: 'Sum of Payment Amount'},
+            { key: 'volunteerOppsAttended', label: 'Sum of Volunteer Opps'}, { key: 'eventsAttended', label: 'Sum of Total Events'}
+        ];
+
+        // --- DATA GENERATION ---
+        const generateData = (count) => {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                const roles = [...new Set(Array.from({length: Math.floor(Math.random() * 2) + 1}, () => USER_ROLES[Math.floor(Math.random() * USER_ROLES.length)]))];
+                const isDonor = roles.includes('Individual') || roles.includes('Employee');
+                const isVolunteer = roles.includes('Volunteer');
+                const donationAmount = isDonor ? Math.floor(Math.random() * 5000) + 5 : 0;
+                const pledgePaid = Math.random() > 0.2;
+                const volunteerHistory = isVolunteer ? [...new Set(Array.from({length: Math.floor(Math.random() * 4)}, () => VOLUNTEER_OPPORTUNITIES[Math.floor(Math.random() * VOLUNTEER_OPPORTUNITIES.length)]))] : [];
+                const eventHistory = [...new Set(Array.from({length: Math.floor(Math.random() * 5)}, () => EVENT_NAMES[Math.floor(Math.random() * EVENT_NAMES.length)]))];
+
+                data.push({
+                    name: `${FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`,
+                    role: roles,
+                    workplace: WORKPLACES[Math.floor(Math.random() * WORKPLACES.length)],
+                    giftType: GIFT_TYPES[Math.floor(Math.random() * GIFT_TYPES.length)],
+                    donationAmount, pledgePaid,
+                    churnStatus: isDonor ? CHURN_STATUSES[Math.floor(Math.random() * CHURN_STATUSES.length)] : 'N/A',
+                    campaignYear: CAMPAIGN_YEARS[Math.floor(Math.random() * CAMPAIGN_YEARS.length)],
+                    campaignType: CAMPAIGN_TYPES[Math.floor(Math.random() * CAMPAIGN_TYPES.length)],
+                    paymentType: PAYMENT_TYPES[Math.floor(Math.random() * PAYMENT_TYPES.length)],
+                    pledgeAmount: donationAmount + (Math.random() * 500),
+                    paymentAmount: pledgePaid ? donationAmount : 0,
+                    address: `${i+1} Main St`, email: `user${i}@example.com`, phone: `555-01${String(i).padStart(2, '0')}`,
+                    volunteerHistory, volunteerOppsAttended: volunteerHistory.length,
+                    eventHistory, eventsAttended: eventHistory.length,
+                });
+            }
+            return data;
+        };
+        
+        // --- RENDERING FUNCTIONS ---
+        const renderTable = (data) => {
             const tableHead = getEl('data-table-head');
             const tableBody = getEl('data-table-body');
-            if (!tableHead || !tableBody) return;
-            tableHead.innerHTML = ''; tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+            
             const headerRow = document.createElement('tr');
-            selectedFields.forEach(fieldKey => { const field = ALL_FIELDS.find(f => f.key === fieldKey); if (field) { const th = document.createElement('th'); th.className = "px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"; th.textContent = field.label; headerRow.appendChild(th); } });
+            selectedFields.forEach(fieldKey => {
+                const field = ALL_FIELDS.find(f => f.key === fieldKey);
+                if (field) {
+                    const th = document.createElement('th');
+                    th.className = "px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider";
+                    th.textContent = field.label;
+                    headerRow.appendChild(th);
+                }
+            });
             tableHead.appendChild(headerRow);
-            currentFilteredData.slice(0, 200).forEach(d => { const row = document.createElement('tr'); selectedFields.forEach(fieldKey => { const td = document.createElement('td'); td.className = "px-4 py-3 whitespace-nowrap text-sm text-gray-300"; let content = d[fieldKey]; if (fieldKey === 'pledgePaid') { content = d.pledgePaid ? '<span class="text-green-400 font-semibold">Paid</span>' : '<span class="text-red-400">Unpaid</span>'; } td.innerHTML = content || 'N/A'; row.appendChild(td); }); tableBody.appendChild(row); });
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${selectedFields.length}" class="text-center py-8 text-gray-500">No accounts match the selected filters.</td></tr>`;
+                return;
+            }
+
+            data.slice(0, 200).forEach(d => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-gray-700/50";
+                selectedFields.forEach(fieldKey => {
+                    const td = document.createElement('td');
+                    td.className = "px-4 py-3 whitespace-nowrap text-sm text-gray-300";
+                    let content = d[fieldKey];
+                    
+                    if (['role', 'volunteerHistory', 'eventHistory'].includes(fieldKey)) {
+                        content = Array.isArray(d[fieldKey]) ? d[fieldKey].join(', ') : d[fieldKey];
+                    } else if (['donationAmount', 'pledgeAmount', 'paymentAmount'].includes(fieldKey)) {
+                        content = `$${content.toLocaleString()}`;
+                    } else if (fieldKey === 'pledgePaid') {
+                        content = d.pledgePaid ? '<span class="text-green-400 font-semibold">Paid</span>' : '<span class="text-red-400">Unpaid</span>';
+                    }
+                    td.innerHTML = content || 'N/A';
+                    row.appendChild(td);
+                });
+                tableBody.appendChild(row);
+            });
         };
+
+        const renderCustomChart = (chartData, chartType, title) => {
+            const ctx = getEl('custom-chart-canvas').getContext('2d');
+            if(customChart) customChart.destroy();
+            getEl('chart-display-title').textContent = title;
+            customChart = new Chart(ctx, {
+                type: chartType,
+                data: { labels: chartData.labels, datasets: [{ label: chartData.metricLabel, data: chartData.data, backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6', '#ec4899'], borderColor: '#4b5563', }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#d1d5db' } } } }
+            });
+            getEl('chart-display-modal').style.display = 'flex';
+        };
+
+        // --- FILTERING LOGIC ---
         const applyFilters = () => {
-            currentFilteredData = allData;
+            const getSelected = (id) => Array.from(document.querySelectorAll(`#${id} input:checked`)).map(cb => cb.value);
+            const filters = {
+                minAmount: parseFloat(getEl('min-amount-filter').value) || 0,
+                maxAmount: parseFloat(getEl('max-amount-filter').value) || Infinity,
+                minVolunteerEvents: parseFloat(getEl('min-volunteer-events-filter').value) || 0,
+                maxVolunteerEvents: parseFloat(getEl('max-volunteer-events-filter').value) || Infinity,
+                minTotalEvents: parseFloat(getEl('min-total-events-filter').value) || 0,
+                maxTotalEvents: parseFloat(getEl('max-total-events-filter').value) || Infinity,
+                selectedRoles: getSelected('role-checkboxes'),
+                roleLogic: document.querySelector('input[name="role-logic"]:checked').value,
+                selectedWorkplaces: getSelected('workplace-checkboxes'),
+                selectedOpps: getSelected('opportunity-checkboxes'),
+                selectedEvents: getSelected('event-checkboxes'),
+                selectedPledge: getSelected('pledge-checkboxes'),
+                selectedChurn: getSelected('churn-checkboxes'),
+                selectedGiftTypes: getSelected('gift-type-checkboxes'),
+                selectedCampaignYears: getSelected('campaign-year-checkboxes'),
+                selectedCampaignTypes: getSelected('campaign-type-checkboxes'),
+                selectedPaymentTypes: getSelected('payment-type-checkboxes'),
+            };
+
+            currentFilteredData = allData.filter(d => {
+                const roleMatch = filters.selectedRoles.length === 0 || (filters.roleLogic === 'or' ? filters.selectedRoles.some(r => d.role.includes(r)) : filters.selectedRoles.every(r => d.role.includes(r)));
+                const pledgeMatch = filters.selectedPledge.length === 0 || (filters.selectedPledge.includes('paid') && d.pledgePaid) || (filters.selectedPledge.includes('unpaid') && !d.pledgePaid);
+                
+                return roleMatch && pledgeMatch &&
+                    (filters.selectedWorkplaces.length === 0 || filters.selectedWorkplaces.includes(d.workplace)) &&
+                    (filters.selectedOpps.length === 0 || filters.selectedOpps.some(opp => d.volunteerHistory.includes(opp))) &&
+                    (filters.selectedEvents.length === 0 || filters.selectedEvents.some(evt => d.eventHistory.includes(evt))) &&
+                    (d.volunteerOppsAttended >= filters.minVolunteerEvents && d.volunteerOppsAttended <= filters.maxVolunteerEvents) &&
+                    (d.eventsAttended >= filters.minTotalEvents && d.eventsAttended <= filters.maxTotalEvents) &&
+                    (filters.selectedGiftTypes.length === 0 || filters.selectedGiftTypes.includes(d.giftType)) &&
+                    (d.donationAmount >= filters.minAmount && d.donationAmount <= filters.maxAmount) &&
+                    (filters.selectedChurn.length === 0 || filters.selectedChurn.includes(d.churnStatus)) &&
+                    (filters.selectedCampaignYears.length === 0 || filters.selectedCampaignYears.includes(String(d.campaignYear))) &&
+                    (filters.selectedCampaignTypes.length === 0 || filters.selectedCampaignTypes.includes(d.campaignType)) &&
+                    (filters.selectedPaymentTypes.length === 0 || filters.selectedPaymentTypes.includes(d.paymentType));
+            });
+            
             getEl('results-count').textContent = currentFilteredData.length.toLocaleString();
-            renderTable();
+            renderTable(currentFilteredData);
+        };
+
+        // --- SETUP & INITIALIZATION ---
+        allData = generateData(5000);
+        
+        const populateCheckboxes = (containerId, options) => {
+            const container = getEl(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const label = typeof opt === 'object' ? opt.label : opt;
+                const value = typeof opt === 'object' ? opt.key : opt;
+                container.innerHTML += `<label class="checkbox-label"><input type="checkbox" class="checkbox" value="${value}"><span>${label}</span></label>`;
+            });
         };
         
-        const setupModal = (buttonId, modalId, doneButtonId) => {
-            const button = getEl(buttonId); const modal = getEl(modalId); if (!button || !modal) return;
-            getEl(doneButtonId).addEventListener('click', () => { modal.style.display = 'none'; applyFilters(); });
+        const setupModal = (buttonId, modalId, doneButtonId, checkboxesSelector, defaultText) => {
+            const button = getEl(buttonId);
+            const modal = getEl(modalId);
+            if (!button || !modal) return;
+
+            getEl(doneButtonId).addEventListener('click', () => {
+                modal.style.display = 'none';
+                if (checkboxesSelector) {
+                    const selected = Array.from(document.querySelectorAll(`${checkboxesSelector} input:checked`)).map(cb => cb.value);
+                    button.textContent = selected.length === 0 ? defaultText : selected.length > 2 ? `${selected.length} selected` : selected.map(val => {
+                        const option = PLEDGE_STATUSES.find(p => p.key === val);
+                        return option ? option.label : val;
+                    }).join(', ');
+                    button.classList.toggle('active', selected.length > 0);
+                }
+                applyFilters();
+            });
             button.addEventListener('click', () => modal.style.display = 'flex');
             modal.addEventListener('click', (e) => { if (e.target === modal) getEl(doneButtonId).click(); });
         };
+
+        // Populate and set up all modals and filters
+        populateCheckboxes('role-checkboxes', USER_ROLES);
+        populateCheckboxes('workplace-checkboxes', WORKPLACES);
+        populateCheckboxes('opportunity-checkboxes', VOLUNTEER_OPPORTUNITIES);
+        populateCheckboxes('event-checkboxes', EVENT_NAMES);
+        populateCheckboxes('pledge-checkboxes', PLEDGE_STATUSES);
+        populateCheckboxes('churn-checkboxes', CHURN_STATUSES);
+        populateCheckboxes('gift-type-checkboxes', GIFT_TYPES);
+        populateCheckboxes('campaign-year-checkboxes', CAMPAIGN_YEARS);
+        populateCheckboxes('campaign-type-checkboxes', CAMPAIGN_TYPES);
+        populateCheckboxes('payment-type-checkboxes', PAYMENT_TYPES);
         
-        ['role', 'workplace', 'opportunity', 'event', 'pledge', 'churn', 'gift-type', 'campaign-year', 'payment-type'].forEach(type => {
-            setupModal(`${type}-filter-button`, `${type}-modal`, `${type}-modal-done`);
+        setupModal('role-filter-button', 'role-modal', 'role-modal-done', '#role-checkboxes', 'All Roles');
+        setupModal('workplace-filter-button', 'workplace-modal', 'workplace-modal-done', '#workplace-checkboxes', 'All Workplaces');
+        setupModal('opportunity-filter-button', 'opportunity-modal', 'opportunity-modal-done', '#opportunity-checkboxes', 'Any Opportunity');
+        setupModal('event-filter-button', 'event-modal', 'event-modal-done', '#event-checkboxes', 'Any Event');
+        setupModal('pledge-filter-button', 'pledge-modal', 'pledge-modal-done', '#pledge-checkboxes', 'All Pledge Statuses');
+        setupModal('churn-filter-button', 'churn-modal', 'churn-modal-done', '#churn-checkboxes', 'All Churn Statuses');
+        setupModal('gift-type-filter-button', 'gift-type-modal', 'gift-type-modal-done', '#gift-type-checkboxes', 'All Gift Types');
+        setupModal('campaign-year-filter-button', 'campaign-year-modal', 'campaign-year-modal-done', '#campaign-year-checkboxes', 'All Campaign Years');
+        setupModal('campaign-type-filter-button', 'campaign-type-modal', 'campaign-type-modal-done', '#campaign-type-checkboxes', 'All Campaign Types');
+        setupModal('payment-type-filter-button', 'payment-type-modal', 'payment-type-modal-done', '#payment-type-checkboxes', 'All Payment Types');
+        
+        const fieldsCheckboxes = getEl('fields-checkboxes');
+        fieldsCheckboxes.innerHTML = '';
+        ALL_FIELDS.forEach(field => {
+            fieldsCheckboxes.innerHTML += `<label class="checkbox-label"><input type="checkbox" class="checkbox" value="${field.key}" ${selectedFields.includes(field.key) ? 'checked' : ''}><span>${field.label}</span></label>`;
         });
         
+        const populateSelect = (selectEl, options, defaultOption) => {
+            selectEl.innerHTML = `<option value="all" disabled selected>${defaultOption}</option>`;
+            options.forEach(opt => selectEl.innerHTML += `<option value="${opt.key}">${opt.label}</option>`);
+        };
+        populateSelect(getEl('group-by-select'), GROUPABLE_FIELDS, 'Select Field');
+        populateSelect(getEl('metric-select'), METRIC_FIELDS, 'Select Metric');
+        
+        // --- Attach all event listeners ---
+        document.querySelectorAll('.filter-input').forEach(el => el.addEventListener('input', applyFilters));
+        document.querySelectorAll('input[name="role-logic"]').forEach(el => el.addEventListener('change', applyFilters));
+        document.querySelectorAll('.filter-toggle-button').forEach(button => button.addEventListener('click', () => {
+            const target = getEl(button.dataset.target);
+            target.classList.toggle('open');
+            button.querySelector('i').classList.toggle('rotate-180');
+        }));
+        
+        setupModal('select-fields-button', 'fields-modal', 'fields-modal-done', null, null);
+        getEl('fields-modal-done').addEventListener('click', () => {
+            selectedFields = Array.from(document.querySelectorAll('#fields-checkboxes input:checked')).map(cb => cb.value);
+        });
+
+        setupModal('create-chart-button', 'chart-creator-modal', 'chart-creator-cancel', null, null);
+        getEl('chart-display-close').addEventListener('click', () => getEl('chart-display-modal').style.display = 'none');
+        getEl('chart-creator-generate').addEventListener('click', () => {
+            const groupBy = getEl('group-by-select').value;
+            const metric = getEl('metric-select').value;
+            const chartType = getEl('chart-type-select').value;
+            if (!groupBy || !metric || groupBy === 'all' || metric === 'all') return;
+            const groupedData = currentFilteredData.reduce((acc, item) => {
+                const key = item[groupBy] || 'N/A';
+                if (!acc[key]) acc[key] = 0;
+                acc[key] += item[metric];
+                return acc;
+            }, {});
+            const chartData = { labels: Object.keys(groupedData), data: Object.values(groupedData), metricLabel: METRIC_FIELDS.find(f => f.key === metric).label };
+            const title = `${METRIC_FIELDS.find(f => f.key === metric).label} by ${GROUPABLE_FIELDS.find(f => f.key === groupBy).label}`;
+            renderCustomChart(chartData, chartType, title);
+            getEl('chart-creator-modal').style.display = 'none';
+        });
+
+        getEl('reset-filters').addEventListener('click', () => { /* Reset logic here */ });
+        getEl('sidebar-toggle').addEventListener('click', () => { /* Sidebar toggle logic here */ });
+
+        const saveWarehouseBtn = getEl('save-warehouse-btn');
+        const saveMailingListBtn = getEl('save-mailing-list-btn');
+        const saveListModal = getEl('save-list-modal');
+        const saveListModalTitle = getEl('save-list-modal-title');
+        const saveListCount = getEl('save-list-count');
+        const saveListType = getEl('save-list-type');
+        const listNameInput = getEl('list-name-input');
+        const saveListCancelBtn = getEl('save-list-cancel-btn');
+        const saveListSaveBtn = getEl('save-list-save-btn');
+        let currentListType = '';
+
+        const openSaveListModal = (type) => {
+            currentListType = type;
+            saveListModalTitle.textContent = `Save as ${type}`;
+            saveListType.textContent = type.toLowerCase();
+            saveListCount.textContent = currentFilteredData.length.toLocaleString();
+            listNameInput.value = '';
+            saveListModal.style.display = 'flex';
+            listNameInput.focus();
+        };
+
+        const closeSaveListModal = () => saveListModal.style.display = 'none';
+
+        saveWarehouseBtn.addEventListener('click', () => openSaveListModal('Warehouse'));
+        saveMailingListBtn.addEventListener('click', () => openSaveListModal('Mailing List'));
+        saveListCancelBtn.addEventListener('click', closeSaveListModal);
+        saveListModal.addEventListener('click', (e) => { if (e.target === saveListModal) closeSaveListModal(); });
+        saveListSaveBtn.addEventListener('click', () => {
+            const listName = listNameInput.value.trim();
+            if (!listName) return;
+            console.log(`Saving ${currentListType} as "${listName}" with ${currentFilteredData.length} records.`);
+            closeSaveListModal();
+        });
+
         applyFilters(); 
     };
     
+    // --- FINAL INITIALIZATION CALL ---
     try {
         initializeBuilderPage();
     } catch (error) {
