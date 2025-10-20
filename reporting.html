@@ -80,6 +80,12 @@
         #preview-content table { border-collapse: collapse; width: 100%; }
         #preview-content th, #preview-content td { border: 1px solid #ccc; padding: 4px; text-align: left; font-size: 10px; }
         #preview-content th { background-color: #f2f2f2; font-weight: bold; }
+        
+        /* Saved Reports Tab Styles */
+        .sidebar-tab { padding: 0.5rem 1rem; color: #9ca3af; border-bottom: 2px solid transparent; }
+        .sidebar-tab.active { color: var(--primary-color); border-color: var(--primary-color); }
+        .sidebar-tab-content { display: none; }
+        .sidebar-tab-content.active { display: block; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -108,53 +114,70 @@
                             <svg id="collapse-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
                             <svg id="expand-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
                         </button>
-                        <div id="sidebar-content" class="flex flex-col h-full overflow-y-auto pr-2">
-                            <h3 class="text-xl font-bold mb-4">Filters</h3>
-                            <div class="space-y-4 flex-grow">
-                                <div class="border-t border-gray-700 pt-4">
-                                    <button class="filter-toggle-button" data-target="gift-filters"><span>Gift</span><i class="fa-solid fa-chevron-down transform"></i></button>
-                                    <div id="gift-filters" class="filter-section open space-y-2 pt-2">
-                                        <input type="number" id="min-amount-filter" placeholder="Min Amount" class="filter-input">
-                                        <input type="number" id="max-amount-filter" placeholder="Max Amount" class="filter-input">
-                                        <button id="pledge-filter-button" class="filter-multiselect-button">All Pledge Statuses</button>
-                                        <button id="churn-filter-button" class="filter-multiselect-button">All Churn Statuses</button>
-                                        <button id="gift-type-filter-button" class="filter-multiselect-button">All Gift Types</button>
-                                        <button id="campaign-year-filter-button" class="filter-multiselect-button">All Campaign Years</button>
-                                        <button id="campaign-type-filter-button" class="filter-multiselect-button">All Campaign Types</button>
-                                        <button id="payment-type-filter-button" class="filter-multiselect-button">All Payment Types</button>
+                        <div id="sidebar-content" class="flex flex-col h-full overflow-hidden">
+                            <!-- Sidebar Tabs -->
+                            <div class="flex border-b border-gray-700 -mx-6 px-4">
+                                <button id="filters-tab-btn" class="sidebar-tab active">Filters</button>
+                                <button id="saved-reports-tab-btn" class="sidebar-tab">Saved Reports</button>
+                            </div>
+
+                            <!-- Filters Tab Content -->
+                            <div id="filters-tab-content" class="sidebar-tab-content active flex flex-col h-full overflow-y-auto mt-4 pr-2">
+                                <div class="space-y-4 flex-grow">
+                                    <div class="border-t border-gray-700 pt-4">
+                                        <button class="filter-toggle-button" data-target="gift-filters"><span>Gift</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                        <div id="gift-filters" class="filter-section open space-y-2 pt-2">
+                                            <input type="number" id="min-amount-filter" placeholder="Min Amount" class="filter-input">
+                                            <input type="number" id="max-amount-filter" placeholder="Max Amount" class="filter-input">
+                                            <button id="pledge-filter-button" class="filter-multiselect-button">All Pledge Statuses</button>
+                                            <button id="churn-filter-button" class="filter-multiselect-button">All Churn Statuses</button>
+                                            <button id="gift-type-filter-button" class="filter-multiselect-button">All Gift Types</button>
+                                            <button id="campaign-year-filter-button" class="filter-multiselect-button">All Campaign Years</button>
+                                            <button id="campaign-type-filter-button" class="filter-multiselect-button">All Campaign Types</button>
+                                            <button id="payment-type-filter-button" class="filter-multiselect-button">All Payment Types</button>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-gray-700 pt-4">
+                                        <button class="filter-toggle-button" data-target="role-filters"><span>Role</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                        <div id="role-filters" class="filter-section space-y-2 pt-2 open">
+                                             <button id="role-filter-button" class="filter-multiselect-button">All Roles</button>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-gray-700 pt-4">
+                                        <button class="filter-toggle-button" data-target="event-attendance-filters"><span>Event Attendance</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                        <div id="event-attendance-filters" class="filter-section space-y-2 pt-2">
+                                            <input type="number" id="min-total-events-filter" placeholder="Min Events Attended" class="filter-input">
+                                            <input type="number" id="max-total-events-filter" placeholder="Max Events Attended" class="filter-input">
+                                            <button id="event-filter-button" class="filter-multiselect-button">Any Event</button>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-gray-700 pt-4">
+                                        <button class="filter-toggle-button" data-target="volunteering-filters"><span>Volunteering</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                        <div id="volunteering-filters" class="filter-section space-y-2 pt-2">
+                                            <input type="number" id="min-volunteer-events-filter" placeholder="Min Opps Attended" class="filter-input">
+                                            <input type="number" id="max-volunteer-events-filter" placeholder="Max Opps Attended" class="filter-input">
+                                            <button id="opportunity-filter-button" class="filter-multiselect-button">Any Opportunity</button>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-gray-700 pt-4">
+                                        <button class="filter-toggle-button" data-target="workplace-filters"><span>Workplace</span><i class="fa-solid fa-chevron-down transform"></i></button>
+                                        <div id="workplace-filters" class="filter-section space-y-2 pt-2">
+                                            <button id="workplace-filter-button" class="filter-multiselect-button">All Workplaces</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="border-t border-gray-700 pt-4">
-                                    <button class="filter-toggle-button" data-target="role-filters"><span>Role</span><i class="fa-solid fa-chevron-down transform"></i></button>
-                                    <div id="role-filters" class="filter-section space-y-2 pt-2 open">
-                                         <button id="role-filter-button" class="filter-multiselect-button">All Roles</button>
-                                    </div>
-                                </div>
-                                <div class="border-t border-gray-700 pt-4">
-                                    <button class="filter-toggle-button" data-target="event-attendance-filters"><span>Event Attendance</span><i class="fa-solid fa-chevron-down transform"></i></button>
-                                    <div id="event-attendance-filters" class="filter-section space-y-2 pt-2">
-                                        <input type="number" id="min-total-events-filter" placeholder="Min Events Attended" class="filter-input">
-                                        <input type="number" id="max-total-events-filter" placeholder="Max Events Attended" class="filter-input">
-                                        <button id="event-filter-button" class="filter-multiselect-button">Any Event</button>
-                                    </div>
-                                </div>
-                                <div class="border-t border-gray-700 pt-4">
-                                    <button class="filter-toggle-button" data-target="volunteering-filters"><span>Volunteering</span><i class="fa-solid fa-chevron-down transform"></i></button>
-                                    <div id="volunteering-filters" class="filter-section space-y-2 pt-2">
-                                        <input type="number" id="min-volunteer-events-filter" placeholder="Min Opps Attended" class="filter-input">
-                                        <input type="number" id="max-volunteer-events-filter" placeholder="Max Opps Attended" class="filter-input">
-                                        <button id="opportunity-filter-button" class="filter-multiselect-button">Any Opportunity</button>
-                                    </div>
-                                </div>
-                                <div class="border-t border-gray-700 pt-4">
-                                    <button class="filter-toggle-button" data-target="workplace-filters"><span>Workplace</span><i class="fa-solid fa-chevron-down transform"></i></button>
-                                    <div id="workplace-filters" class="filter-section space-y-2 pt-2">
-                                        <button id="workplace-filter-button" class="filter-multiselect-button">All Workplaces</button>
-                                    </div>
+                                <div class="mt-auto pt-4 border-t border-gray-700 flex gap-2">
+                                    <button id="reset-filters" class="w-full p-2 bg-gray-600/80 text-white rounded-md hover:bg-gray-600 transition-all text-sm font-semibold">Reset</button>
+                                    <button id="save-current-filters-btn" class="w-full p-2 modal-button-primary text-sm font-semibold">Save</button>
                                 </div>
                             </div>
-                            <div class="mt-auto pt-4 border-t border-gray-700">
-                                <button id="reset-filters" class="w-full mt-2 p-2 bg-red-600/80 text-white rounded-md hover:bg-red-600 transition-all text-sm font-semibold">Reset All Filters</button>
+
+                             <!-- Saved Reports Tab Content -->
+                            <div id="saved-reports-tab-content" class="sidebar-tab-content flex flex-col h-full overflow-y-auto mt-4 pr-2">
+                                <input type="text" id="search-saved-reports" class="filter-input mb-4" placeholder="Search reports...">
+                                <ul id="saved-reports-list" class="space-y-2">
+                                    <!-- Saved reports will be dynamically populated here -->
+                                </ul>
                             </div>
                         </div>
                     </aside>
@@ -582,6 +605,23 @@
             <div class="flex justify-end p-4 bg-gray-700/50 rounded-b-lg gap-2">
                 <button id="save-list-cancel-btn" class="modal-button-secondary">Cancel</button>
                 <button id="save-list-save-btn" class="modal-button-primary">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Save Custom Report Modal -->
+    <div id="save-custom-report-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-md">
+            <h3 class="modal-header">Save Custom Report</h3>
+            <div class="p-4 space-y-4">
+                <div>
+                    <label for="custom-report-name-input" class="font-semibold">Report Name</label>
+                    <input type="text" id="custom-report-name-input" class="filter-input mt-1" placeholder="e.g., Major Donors Q4 2024">
+                </div>
+            </div>
+            <div class="flex justify-end p-4 bg-gray-700/50 rounded-b-lg gap-2">
+                <button id="save-custom-report-cancel-btn" class="modal-button-secondary">Cancel</button>
+                <button id="save-custom-report-save-btn" class="modal-button-primary">Save</button>
             </div>
         </div>
     </div>
