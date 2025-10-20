@@ -75,6 +75,11 @@
         .column-item.dragging { opacity: 0.5; background: #374151; }
         .column-item.hidden-column { opacity: 0.6; }
         .column-item.hidden-column input { text-decoration: line-through; }
+
+        /* Preview Modal Styles */
+        #preview-content table { border-collapse: collapse; width: 100%; }
+        #preview-content th, #preview-content td { border: 1px solid #ccc; padding: 4px; text-align: left; font-size: 10px; }
+        #preview-content th { background-color: #f2f2f2; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -520,6 +525,7 @@
             </div>
         </main>
         <footer class="drawer-footer flex justify-end gap-2">
+            <button id="preview-report-btn" class="modal-button-secondary mr-auto hidden"><i class="fa-solid fa-eye mr-2"></i>Preview</button>
             <button id="cancel-drawer-btn" class="modal-button-secondary">Cancel</button>
             <button id="run-drawer-btn" class="modal-button-primary">Run Report</button>
         </footer>
@@ -529,6 +535,19 @@
     <div id="campaign-account-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Accounts</h3><div id="campaign-account-checkboxes" class="modal-body"></div><button id="campaign-account-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
     <div id="campaign-type-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Types</h3><div id="campaign-type-checkboxes" class="modal-body"></div><button id="campaign-type-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
     <div id="campaign-status-modal" class="modal-backdrop"><div class="modal-content"><h3 class="modal-header">Select Campaign Statuses</h3><div id="campaign-status-checkboxes" class="modal-body"></div><button id="campaign-status-modal-done" class="modal-button-primary w-full rounded-t-none">Done</button></div></div>
+
+    <!-- Live Preview Modal -->
+    <div id="report-preview-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-6xl h-5/6 flex flex-col">
+            <header class="modal-header flex justify-between items-center">
+                <span>Report Preview</span>
+                <button id="close-preview-btn" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+            </header>
+            <main id="preview-content" class="p-4 bg-white text-black overflow-auto">
+                <!-- Live preview table will be injected here -->
+            </main>
+        </div>
+    </div>
 
 
     <!-- Modals for Custom Report Builder -->
