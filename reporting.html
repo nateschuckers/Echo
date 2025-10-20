@@ -70,6 +70,11 @@
         .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .input-label { font-size: 0.875rem; font-weight: 500; color: #d1d5db; }
         .radio-group label { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
+
+        /* Column Manager Styles */
+        .column-item.dragging { opacity: 0.5; background: #374151; }
+        .column-item.hidden-column { opacity: 0.6; }
+        .column-item.hidden-column input { text-decoration: line-through; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -300,9 +305,77 @@
                         </div>
                     </div>
                 </div>
-                <div class="step-content" data-step-content="2">...</div>
+                <div class="step-content" data-step-content="2">
+                    <div class="space-y-4">
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Rollup Totals and Recap Report</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon open"></i>
+                            </button>
+                            <div class="accordion-content open">
+                                <div class="pt-4 space-y-2">
+                                    <p class="input-label">Override goal/projected from structure node setting</p>
+                                    <div class="pl-4 space-y-2">
+                                        <label class="checkbox-label"><input type="checkbox" class="checkbox" checked> Goal</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="checkbox" checked> Projected</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="checkbox"> Rollup the overriding amount to parent node</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Rollup Report Format</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon open"></i>
+                            </button>
+                            <div class="accordion-content open">
+                                <div class="pt-4 space-y-4">
+                                    <div class="radio-group space-y-2">
+                                        <label><input type="radio" name="rollup-format" checked> Format A - Show Prv. Year Proc., Gain/Loss vs CV</label>
+                                        <label><input type="radio" name="rollup-format"> Format B - Show Final Total In, Final Gain/Loss vs CV</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="input-label">The number of structure levels to show on report</label>
+                                        <input type="number" class="filter-input" value="9999">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion">
+                            <button class="accordion-header">
+                                <h4>Recap Report Format</h4>
+                                <i class="fa-solid fa-chevron-down accordion-icon open"></i>
+                            </button>
+                            <div class="accordion-content open">
+                                <div class="pt-4 space-y-4">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="produce-recap-report" class="checkbox"> Produce the Recap Report
+                                    </label>
+                                    <div id="recap-report-options" class="pl-4 pt-2 space-y-2 radio-group opacity-50">
+                                        <label><input type="radio" name="recap-format" disabled> Format A - Show Prv. Year Proc., Gain/Loss vs CV</label>
+                                        <label><input type="radio" name="recap-format" disabled> Format B - Show Final Total In, Final Gain/Loss vs CV</label>
+                                        <label><input type="radio" name="recap-format" disabled> Format C - Show Goal, Total In, Increase/Decrease on Final dollars</label>
+                                        <label><input type="radio" name="recap-format" disabled> Format D - Show CV, Final Total In, O/S, Goal, % Needed on O/S CV</label>
+                                        <label><input type="radio" name="recap-format" disabled> Format E - Campaign Daily Report</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="input-label">The number of structure levels to show on report</label>
+                                        <input type="number" class="filter-input" value="3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="step-content" data-step-content="3">...</div>
-                <div class="step-content" data-step-content="4">...</div>
+                <div class="step-content" data-step-content="4">
+                    <div class="space-y-3">
+                        <p class="text-sm text-gray-400">Drag to reorder, edit name, and toggle visibility.</p>
+                        <ul id="monitoring-column-manager" class="space-y-2">
+                            <!-- Columns will be dynamically inserted here by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
                 <div class="step-content" data-step-content="5"><div class="scheduler-placeholder"></div></div>
             </div>
             <!-- Individual Giving Report Options -->
