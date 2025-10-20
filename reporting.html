@@ -162,6 +162,8 @@
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold">Filtered Results (<span id="results-count">0</span>)</h3>
                             <div class="flex items-center gap-2">
+                                <button id="save-warehouse-btn" class="modal-button-secondary"><i class="fa-solid fa-database mr-2"></i>Save as Warehouse</button>
+                                <button id="save-mailing-list-btn" class="modal-button-secondary"><i class="fa-solid fa-envelope mr-2"></i>Save as Mailing List</button>
                                 <button id="select-fields-button" class="modal-button-secondary"><i class="fa-solid fa-columns mr-2"></i>Manage Columns</button>
                                 <button id="create-chart-button" class="modal-button-primary"><i class="fa-solid fa-chart-pie mr-2"></i>Create Chart</button>
                             </div>
@@ -565,6 +567,24 @@
     
     <div id="chart-creator-modal" class="modal-backdrop"><div class="modal-content w-full max-w-md"><h3 class="modal-header">Create a Chart</h3><div class="p-4 space-y-4"><div><label class="font-semibold">Group By</label><select id="group-by-select" class="filter-input mt-1"></select></div><div><label class="font-semibold">Metric</label><select id="metric-select" class="filter-input mt-1"></select></div><div><label class="font-semibold">Chart Type</label><select id="chart-type-select" class="filter-input mt-1"><option value="bar">Bar</option><option value="pie">Pie</option><option value="doughnut">Doughnut</option></select></div></div><div class="flex justify-end p-4 bg-gray-700/50 rounded-b-lg gap-2"><button id="chart-creator-cancel" class="modal-button-secondary">Cancel</button><button id="chart-creator-generate" class="modal-button-primary">Generate</button></div></div></div>
     <div id="chart-display-modal" class="modal-backdrop"><div class="modal-content w-full max-w-3xl h-3/4 flex flex-col"><div class="flex justify-between items-center p-4 border-b border-gray-700"><h3 id="chart-display-title" class="modal-header p-0 border-none">Chart</h3><button id="chart-display-close" class="text-gray-400 hover:text-white text-2xl">&times;</button></div><div class="p-4 flex-grow relative"><canvas id="custom-chart-canvas"></canvas></div></div></div>
+
+    <!-- Save List Modal (for Custom tab) -->
+    <div id="save-list-modal" class="modal-backdrop">
+        <div class="modal-content w-full max-w-md">
+            <h3 id="save-list-modal-title" class="modal-header">Save List</h3>
+            <div class="p-4 space-y-4">
+                <div>
+                    <label for="list-name-input" class="font-semibold">List Name</label>
+                    <input type="text" id="list-name-input" class="filter-input mt-1" placeholder="Enter a name for the list...">
+                </div>
+                 <p class="text-sm text-gray-400">This will save the current <span id="save-list-count">0</span> filtered results as a new <strong id="save-list-type"></strong>.</p>
+            </div>
+            <div class="flex justify-end p-4 bg-gray-700/50 rounded-b-lg gap-2">
+                <button id="save-list-cancel-btn" class="modal-button-secondary">Cancel</button>
+                <button id="save-list-save-btn" class="modal-button-primary">Save</button>
+            </div>
+        </div>
+    </div>
 
     <script src="reporting.js"></script>
 </body>
