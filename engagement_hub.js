@@ -33,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const addAttendeeModal = document.getElementById('add-attendee-modal');
     const addVolunteerModal = document.getElementById('add-volunteer-modal');
     
+    // Forms
+    const addEventForm = document.getElementById('add-event-form');
+    const addOpportunityForm = document.getElementById('add-opportunity-form');
+    const addAttendeeForm = document.getElementById('add-attendee-form');
+    const addVolunteerForm = document.getElementById('add-volunteer-form');
+
     // Buttons
     const addEventBtn = document.getElementById('add-event-btn');
     const addOpportunityBtn = document.getElementById('add-opportunity-btn');
@@ -209,8 +215,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // --- FORM SUBMISSIONS ---
-    addEventForm.addEventListener('submit', (e) => { e.preventDefault(); /* ... same as before ... */ });
-    addOpportunityForm.addEventListener('submit', (e) => { e.preventDefault(); /* ... same as before ... */ });
+    addEventForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const iconChoices = [{icon: 'fa-ticket', color: 'purple'}, {icon: 'fa-calendar-day', color: 'yellow'}, {icon: 'fa-recycle', color: 'green'}, {icon: 'fa-gifts', color: 'red'}, {icon: 'fa-microphone', color: 'blue'}];
+        const randomChoice = iconChoices[Math.floor(Math.random() * iconChoices.length)];
+        const newEvent = {
+            name: document.getElementById('event-name').value,
+            date: document.getElementById('event-date').value,
+            capacity: parseInt(document.getElementById('event-capacity').value),
+            icon: randomChoice.icon,
+            color: randomChoice.color,
+            attendeeList: []
+        };
+        eventsData.push(newEvent);
+        updateDisplay();
+        hideModal(addEventModal);
+        addEventForm.reset();
+    });
+
+    addOpportunityForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const iconChoices = [{icon: 'fa-seedling', color: 'green'}, {icon: 'fa-book-open', color: 'blue'}, {icon: 'fa-tools', color: 'orange'}, {icon: 'fa-box-open', color: 'red'}, {icon: 'fa-paint-brush', color: 'purple'}];
+        const randomChoice = iconChoices[Math.floor(Math.random() * iconChoices.length)];
+        const newOpportunity = {
+            name: document.getElementById('opp-name').value,
+            agency: document.getElementById('opp-agency').value,
+            date: document.getElementById('opp-date').value,
+            hours: parseInt(document.getElementById('opp-hours').value),
+            capacity: parseInt(document.getElementById('opp-capacity').value),
+            icon: randomChoice.icon,
+            color: randomChoice.color,
+            volunteerList: []
+        };
+        opportunitiesData.push(newOpportunity);
+        updateDisplay();
+        hideModal(addOpportunityModal);
+        addOpportunityForm.reset();
+    });
 
     addAttendeeForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -249,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
     eventsContainer.addEventListener('click', (e) => {
         const button = e.target.closest('.add-attendee-btn');
         if (button) {
+            e.stopPropagation(); // Prevent triggering the row click
             const eventName = button.dataset.eventName;
             document.getElementById('attendee-modal-event-name').textContent = eventName;
             document.getElementById('attendee-event-name-hidden').value = eventName;
@@ -264,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     opportunitiesContainer.addEventListener('click', (e) => {
         const button = e.target.closest('.add-volunteer-btn');
         if (button) {
+            e.stopPropagation(); // Prevent triggering the row click
             const oppName = button.dataset.opportunityName;
             document.getElementById('volunteer-modal-opp-name').textContent = oppName;
             document.getElementById('volunteer-opp-name-hidden').value = oppName;
