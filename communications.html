@@ -407,7 +407,8 @@
                             </ul></div>`;
                         
                         return `
-                           <div class="space-y-6">
+                        <div class="max-h-[85vh] overflow-y-auto pr-2">
+                           <div class="space-y-6 pr-4">
                                 <!-- Header Section -->
                                 <div class="flex items-center gap-4">
                                     <div class="log-icon bg-${icon.c}-100 text-${icon.c}-600 dark:bg-${icon.c}-900/50 dark:text-${icon.c}-400 !w-12 !h-12 text-xl flex-shrink-0"><i class="fa-solid ${icon.i}"></i></div>
@@ -443,6 +444,7 @@
                                      <details class="border border-gray-700 rounded-lg"><summary class="p-3 flex justify-between items-center font-semibold text-gray-200 text-sm uppercase tracking-wider hover:bg-gray-700/50 rounded-t-lg"><div class="flex items-center gap-2"><i class="fa-solid fa-info-circle"></i> Audit Information</div><i class="fa-solid fa-chevron-right accordion-icon"></i></summary><div class="p-4 border-t border-gray-700">${auditHTML}</div></details>
                                 </div>
                             </div>
+                        </div>
                         `;
                     };
 
@@ -461,8 +463,8 @@
                             const logData = communicationData.find(log => log.id === commId);
                             if (logData) {
                                 // Pass an empty string for the title to remove the header
-                                // Using 'screen-lg' for a wider modal, closer to 16:9 on many screens.
-                                window.parent.showAppModal('', createCommLogModalHTML(logData), 'screen-lg');
+                                // Using 'screen-2xl' for the widest possible modal to achieve a 16:9 feel.
+                                window.parent.showAppModal('', createCommLogModalHTML(logData), 'screen-2xl');
                             }
                         }
                     });
