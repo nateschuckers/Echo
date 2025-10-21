@@ -30,6 +30,7 @@
             padding: 1rem;
             border-bottom: 1px solid #374151; /* border-gray-700 */
             transition: background-color 0.2s;
+            cursor: pointer;
         }
         .engagement-item:last-child {
             border-bottom: none;
@@ -93,75 +94,121 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 p-6">
-    <div class="space-y-6">
-        <!-- Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div class="stat-card">
-                <div class="flex-1 text-center">
-                    <p class="text-3xl font-bold" id="total-events">0</p>
-                    <p class="text-sm text-gray-400">Total Events</p>
+    <div id="main-hub-view">
+        <div class="space-y-6">
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="stat-card">
+                    <div class="flex-1 text-center">
+                        <p class="text-3xl font-bold" id="total-events">0</p>
+                        <p class="text-sm text-gray-400">Total Events</p>
+                    </div>
+                    <i class="fa-solid fa-calendar-alt text-3xl text-blue-500 ml-4"></i>
                 </div>
-                <i class="fa-solid fa-calendar-alt text-3xl text-blue-500 ml-4"></i>
-            </div>
-            <div class="stat-card">
-                <div class="flex-1 text-center">
-                    <p class="text-3xl font-bold" id="total-attendees">0</p>
-                    <p class="text-sm text-gray-400">Event Attendees</p>
+                <div class="stat-card">
+                    <div class="flex-1 text-center">
+                        <p class="text-3xl font-bold" id="total-attendees">0</p>
+                        <p class="text-sm text-gray-400">Event Attendees</p>
+                    </div>
+                    <i class="fa-solid fa-ticket text-3xl text-purple-500 ml-4"></i>
                 </div>
-                <i class="fa-solid fa-ticket text-3xl text-purple-500 ml-4"></i>
-            </div>
-            <div class="stat-card">
-                <div class="flex-1 text-center">
-                    <p class="text-3xl font-bold" id="total-volunteers">0</p>
-                    <p class="text-sm text-gray-400">Volunteers</p>
+                <div class="stat-card">
+                    <div class="flex-1 text-center">
+                        <p class="text-3xl font-bold" id="total-volunteers">0</p>
+                        <p class="text-sm text-gray-400">Volunteers</p>
+                    </div>
+                    <i class="fa-solid fa-hands-helping text-3xl text-green-500 ml-4"></i>
                 </div>
-                <i class="fa-solid fa-hands-helping text-3xl text-green-500 ml-4"></i>
-            </div>
-            <div class="stat-card">
-                <div class="flex-1 text-center">
-                    <p class="text-3xl font-bold" id="total-hours">0</p>
-                    <p class="text-sm text-gray-400">Volunteer Hours</p>
+                <div class="stat-card">
+                    <div class="flex-1 text-center">
+                        <p class="text-3xl font-bold" id="total-hours">0</p>
+                        <p class="text-sm text-gray-400">Volunteer Hours</p>
+                    </div>
+                    <i class="fa-solid fa-clock text-3xl text-orange-500 ml-4"></i>
                 </div>
-                <i class="fa-solid fa-clock text-3xl text-orange-500 ml-4"></i>
-            </div>
-            <div class="stat-card">
-                <div class="flex-1 text-center">
-                    <p class="text-3xl font-bold" id="value-of-hours">$0</p>
-                    <p class="text-sm text-gray-400">Value of Volunteering</p>
+                <div class="stat-card">
+                    <div class="flex-1 text-center">
+                        <p class="text-3xl font-bold" id="value-of-hours">$0</p>
+                        <p class="text-sm text-gray-400">Value of Volunteering</p>
+                    </div>
+                    <i class="fa-solid fa-dollar-sign text-3xl text-teal-400 ml-4"></i>
                 </div>
-                <i class="fa-solid fa-dollar-sign text-3xl text-teal-400 ml-4"></i>
             </div>
-        </div>
 
-        <!-- Search Bar -->
-        <div class="relative">
-            <input type="text" id="engagement-search" placeholder="Search events and opportunities by name..." class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-            <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-        </div>
+            <!-- Search Bar -->
+            <div class="relative">
+                <input type="text" id="engagement-search" placeholder="Search events and opportunities by name..." class="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Upcoming Events -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700 flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">Upcoming Events</h3>
-                    <button id="add-event-btn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="fa-solid fa-plus mr-2"></i>Add Event
-                    </button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Upcoming Events -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Upcoming Events</h3>
+                        <button id="add-event-btn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-plus mr-2"></i>Add Event
+                        </button>
+                    </div>
+                    <div id="events-list-container" class="engagement-list-container">
+                        <!-- Dynamic content will be injected here -->
+                    </div>
                 </div>
-                <div id="events-list-container" class="engagement-list-container">
+                <!-- Volunteer Opportunities -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Volunteer Opportunities</h3>
+                        <button id="add-opportunity-btn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-plus mr-2"></i>Add Opportunity
+                        </button>
+                    </div>
+                    <div id="opportunities-list-container" class="engagement-list-container">
                     <!-- Dynamic content will be injected here -->
+                    </div>
                 </div>
             </div>
-            <!-- Volunteer Opportunities -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-700 flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">Volunteer Opportunities</h3>
-                    <button id="add-opportunity-btn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="fa-solid fa-plus mr-2"></i>Add Opportunity
+        </div>
+    </div>
+
+    <!-- Detail View -->
+    <div id="detail-view" class="hidden">
+        <button id="back-to-hub-btn" class="mb-6 flex items-center text-blue-400 hover:text-blue-300 font-semibold">
+            <i class="fa-solid fa-arrow-left mr-2"></i>
+            Back to Engagement Hub
+        </button>
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-8">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Left Side: Info -->
+                <div class="w-full md:w-1/3">
+                    <h2 id="detail-title" class="text-3xl font-bold mb-2"></h2>
+                    <p id="detail-subtitle" class="text-lg text-gray-400 mb-4"></p>
+                    <div class="space-y-4">
+                        <div class="flex items-center text-gray-300">
+                            <i class="fa-solid fa-calendar-day w-6 text-center mr-3 text-xl text-blue-400"></i>
+                            <span id="detail-datetime"></span>
+                        </div>
+                        <div id="detail-hours-container" class="flex items-center text-gray-300">
+                            <i class="fa-solid fa-clock w-6 text-center mr-3 text-xl text-orange-400"></i>
+                            <span id="detail-hours"></span>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-gray-900/50 border border-gray-700 rounded-lg p-4">
+                        <p class="text-sm text-gray-400 mb-1" id="detail-stat-label"></p>
+                        <p class="text-4xl font-bold" id="detail-stat-value"></p>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5 mt-2">
+                            <div id="detail-progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                     <button id="add-person-from-detail-btn" class="mt-6 w-full flex items-center justify-center bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-plus mr-2"></i><span id="add-person-from-detail-btn-text">Add</span>
                     </button>
                 </div>
-                <div id="opportunities-list-container" class="engagement-list-container">
-                   <!-- Dynamic content will be injected here -->
+                <!-- Right Side: List -->
+                <div class="w-full md:w-2/3">
+                    <h3 class="text-lg font-semibold mb-3" id="detail-list-label"></h3>
+                    <div id="detail-list" class="bg-gray-900/50 border border-gray-700 rounded-lg h-96 overflow-y-auto">
+                        <!-- Dynamic list will be injected here -->
+                    </div>
                 </div>
             </div>
         </div>
