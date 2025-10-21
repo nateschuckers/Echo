@@ -463,8 +463,8 @@
                             const logData = communicationData.find(log => log.id === commId);
                             if (logData) {
                                 // Pass an empty string for the title to remove the header
-                                // Using 'screen-2xl' for the widest possible modal to achieve a 16:9 feel.
-                                window.parent.showAppModal('', createCommLogModalHTML(logData), 'screen-2xl');
+                                // Using a combination of classes to force a wide aspect ratio
+                                window.parent.showAppModal('', createCommLogModalHTML(logData), 'max-w-none w-[80vw]');
                             }
                         }
                     });
