@@ -416,30 +416,25 @@
                                         <p class="text-sm text-gray-400">From: <span class="font-medium text-gray-300">${log.sender}</span>  To: <span class="font-medium text-gray-300">${log.recipient}</span></p>
                                     </div>
                                 </div>
-                                <!-- Main Content Grid -->
-                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 border-t border-gray-700 pt-6">
-                                    <!-- Left Column -->
-                                    <div class="lg:col-span-2 space-y-6">
-                                        <div>
-                                            <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Communication</h4>
-                                            <div class="text-gray-300 space-y-3 leading-relaxed p-4 bg-gray-900/50 rounded-lg border border-gray-700">${log.fullText}</div>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Attachments (${log.attachments.length})</h4>
-                                            ${attachmentsHTML}
-                                        </div>
+                                <!-- Details Section -->
+                                <div class="border-t border-gray-700 pt-6">
+                                     <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Details</h4>
+                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                                        <div><span class="text-xs text-gray-400">Method</span><p class="font-semibold text-gray-200 text-sm">${log.type}</p></div>
+                                        <div><span class="text-xs text-gray-400">Date</span><p class="font-semibold text-gray-200 text-sm">${formattedDate}</p></div>
+                                        <div><span class="text-xs text-gray-400">Time</span><p class="font-semibold text-gray-200 text-sm">${formattedTime}</p></div>
+                                        <div><span class="text-xs text-gray-400">Log ID</span><p class="font-mono text-gray-200 text-sm">${log.id}</p></div>
+                                     </div>
+                                </div>
+                                <!-- Main Content -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Communication</h4>
+                                        <div class="text-gray-300 space-y-3 leading-relaxed p-4 bg-gray-900/50 rounded-lg border border-gray-700 min-h-[200px]">${log.fullText}</div>
                                     </div>
-                                    <!-- Right Column -->
-                                    <div class="space-y-4">
-                                        <div>
-                                            <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Details</h4>
-                                            <div class="p-3 bg-gray-900/50 rounded-lg border border-gray-700 space-y-3">
-                                                <div class="flex justify-between text-sm"><span class="text-gray-400">Method:</span> <span class="font-semibold text-gray-200">${log.type}</span></div>
-                                                <div class="flex justify-between text-sm"><span class="text-gray-400">Date:</span> <span class="font-semibold text-gray-200">${formattedDate}</span></div>
-                                                <div class="flex justify-between text-sm"><span class="text-gray-400">Time:</span> <span class="font-semibold text-gray-200">${formattedTime}</span></div>
-                                                <div class="flex justify-between text-sm"><span class="text-gray-400">Log ID:</span> <span class="font-mono text-gray-200">${log.id}</span></div>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Attachments (${log.attachments.length})</h4>
+                                        ${attachmentsHTML}
                                     </div>
                                 </div>
                                  <!-- Footer Accordions -->
@@ -466,7 +461,8 @@
                             const logData = communicationData.find(log => log.id === commId);
                             if (logData) {
                                 // Pass an empty string for the title to remove the header
-                                window.parent.showAppModal('', createCommLogModalHTML(logData), '7xl');
+                                // Using 'screen-lg' for a wider modal, closer to 16:9 on many screens.
+                                window.parent.showAppModal('', createCommLogModalHTML(logData), 'screen-lg');
                             }
                         }
                     });
