@@ -436,7 +436,7 @@
                                 const icon = iconMap[logData.type] || { i: 'fa-question-circle', c: 'gray' };
                                 const modalTitleHTML = `<div class="flex items-center gap-3"><div class="log-icon bg-${icon.c}-100 text-${icon.c}-600 dark:bg-${icon.c}-900/50 dark:text-${icon.c}-400 !w-8 !h-8"><i class="fa-solid ${icon.i}"></i></div><span class="text-xl font-semibold">${logData.subject}</span></div>`;
                                 // Request a wider modal by passing a size class
-                                window.parent.showAppModal(modalTitleHTML, createCommLogModalHTML(logData), '5xl');
+                                window.parent.showAppModal(modalTitleHTML, createCommLogModalHTML(logData), '7xl');
                             }
                         }
                     });
@@ -453,5 +453,6 @@
     </script>
 </body>
 </html>
+
 
 
