@@ -113,6 +113,22 @@
             margin: 0 auto;
         }
         .log-content { flex-grow: 0; }
+
+        /* Accordion styles for modal */
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details .accordion-icon {
+            transition: transform 0.2s;
+        }
+        details[open] .accordion-icon {
+            transform: rotate(90deg);
+        }
+
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -363,46 +379,43 @@
                         
                         const fileIconMap = { pdf: 'fa-file-pdf', image: 'fa-file-image', powerpoint: 'fa-file-powerpoint', default: 'fa-file-alt' };
 
-                        const attachmentsHTML = log.attachments.length > 0 ? log.attachments.map(f => `
+                        const attachmentsHTML = log.attachments.length > 0 ? `<div class="space-y-3">${log.attachments.map(f => `
                             <div class="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-primary/50 transition">
                                 <div class="flex items-center gap-3"><i class="fa-solid ${fileIconMap[f.type] || fileIconMap.default} text-2xl text-gray-400"></i>
                                 <div><p class="font-semibold text-gray-200">${f.name}</p><p class="text-xs text-gray-500">${f.size}</p></div></div>
-                                <button class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-download"></i></button></div>`).join('') : 
+                                <button class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-download"></i></button></div>`).join('')}</div>` : 
                                 '<p class="text-gray-500 text-center py-4">No files attached.</p>';
 
-                        const relatedAccountsHTML = log.relatedAccounts.map(acc => `
+                        const relatedAccountsHTML = `<div class="space-y-1">${log.relatedAccounts.map(acc => `
                             <div class="flex items-center gap-3 p-2 rounded-md hover:bg-gray-700/50">
-                            <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm">${acc.name.charAt(0)}</div>
-                            <div><p class="font-semibold text-sm text-gray-200">${acc.name}</p><p class="text-xs text-gray-400">${acc.type}</p></div></div>`).join('');
+                            <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm flex-shrink-0">${acc.name.charAt(0)}</div>
+                            <div><p class="font-semibold text-sm text-gray-200">${acc.name}</p><p class="text-xs text-gray-400">${acc.type}</p></div></div>`).join('')}</div>`;
 
-                        const auditHTML = `
+                        const auditHTML = `<div class="p-4 bg-gray-900/50 rounded-lg border border-gray-700">
                             <ul class="space-y-2 text-sm text-gray-400">
                                 <li class="flex justify-between"><span>Created By:</span><span class="font-medium text-gray-300">${log.audit.createdBy}</span></li>
                                 <li class="flex justify-between"><span>Created Date:</span><span class="font-medium text-gray-300">${formatAuditDate(log.audit.createdDate)}</span></li>
                                 <li class="flex justify-between"><span>Last Modified By:</span><span class="font-medium text-gray-300">${log.audit.lastModifiedBy}</span></li>
                                 <li class="flex justify-between"><span>Last Modified Date:</span><span class="font-medium text-gray-300">${formatAuditDate(log.audit.lastModifiedDate)}</span></li>
-                            </ul>`;
+                            </ul></div>`;
                         
-                        const modalId = `comm-log-modal-${log.id}`;
-
                         return `
-                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-4">
-                                <div class="lg:col-span-2 space-y-4">
-                                    <div class="border-b border-gray-700 pb-2">
-                                        <nav id="${modalId}-tabs" class="-mb-px flex space-x-6"><button data-tab="notes" class="modal-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-primary text-primary">Notes</button><button data-tab="attachments" class="modal-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-500">Attachments (${log.attachments.length})</button><button data-tab="audit" class="modal-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-500">Audit Info</button></nav>
-                                    </div>
-                                    <div id="${modalId}-tab-content" class="pt-2"><div data-panel="notes" class="modal-panel text-gray-300 space-y-2 leading-relaxed">${log.fullText}</div><div data-panel="attachments" class="modal-panel hidden space-y-3">${attachmentsHTML}</div><div data-panel="audit" class="modal-panel hidden p-4 bg-gray-900/50 rounded-lg border border-gray-700">${auditHTML}</div></div>
+                            <div class="space-y-6">
+                                <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pb-4 border-b border-gray-700">
+                                    <div class="flex items-center gap-3 text-sm"><i class="fa-solid fa-shield-halved w-4 text-center text-gray-400"></i><span class="text-gray-400">Method:</span> <span class="font-semibold text-gray-200">${log.type}</span></div>
+                                    <div class="flex items-center gap-3 text-sm"><i class="fa-solid fa-calendar-alt w-4 text-center text-gray-400"></i><span class="text-gray-400">Date:</span> <span class="font-semibold text-gray-200">${formattedDate}</span></div>
+                                    <div class="flex items-center gap-3 text-sm"><i class="fa-solid fa-clock w-4 text-center text-gray-400"></i><span class="text-gray-400">Time:</span> <span class="font-semibold text-gray-200">${formattedTime}</span></div>
+                                    <div class="flex items-center gap-3 text-sm"><i class="fa-solid fa-hashtag w-4 text-center text-gray-400"></i><span class="text-gray-400">Log ID:</span> <span class="font-mono text-gray-200">${log.id}</span></div>
                                 </div>
-                                <div class="space-y-5"><div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700"><h4 class="font-semibold text-gray-200 mb-3 text-sm uppercase tracking-wider">Details</h4><ul class="space-y-2 text-sm">
-                                <li class="flex items-center gap-3"><i class="fa-solid fa-hashtag w-4 text-center text-gray-400"></i><div><span class="text-gray-400">Log ID:</span> <span class="font-mono text-gray-200">${log.id}</span></div></li>
-                                <li class="flex items-center gap-3"><i class="fa-solid fa-shield-halved w-4 text-center text-gray-400"></i><div><span class="text-gray-400">Method:</span> <span class="font-semibold text-gray-200">${log.type}</span></div></li>
-                                <li class="flex items-center gap-3"><i class="fa-solid fa-calendar-alt w-4 text-center text-gray-400"></i><div><span class="text-gray-400">Date:</span> <span class="font-semibold text-gray-200">${formattedDate}</span></div></li>
-                                <li class="flex items-center gap-3"><i class="fa-solid fa-clock w-4 text-center text-gray-400"></i><div><span class="text-gray-400">Time:</span> <span class="font-semibold text-gray-200">${formattedTime}</span></div></li>
-                                </ul></div><div class="bg-gray-900/50 p-4 rounded-lg border border-gray-700"><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Related Accounts</h4><div class="space-y-1">${relatedAccountsHTML}</div></div></div>
-                            </div>
-                            <script>
-                            (function(){const c=document.getElementById('${modalId}-tabs');if(!c)return;const t=c.querySelectorAll('.modal-tab'),p=c.closest('.lg\\\\:col-span-2').querySelectorAll('.modal-panel');t.forEach(b=>{b.addEventListener('click',()=>{t.forEach(e=>{e.classList.remove('border-primary','text-primary');e.classList.add('border-transparent','text-gray-400')});p.forEach(e=>e.classList.add('hidden'));b.classList.add('border-primary','text-primary');b.classList.remove('border-transparent','text-gray-400');const a=Array.from(p).find(e=>e.dataset.panel===b.dataset.tab);a&&a.classList.remove('hidden')})})})();
-                            <\/script>`;
+                                <div class="space-y-4">
+                                    <div><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Notes</h4><div class="text-gray-300 space-y-2 leading-relaxed">${log.fullText}</div></div>
+                                    <div><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Attachments (${log.attachments.length})</h4>${attachmentsHTML}</div>
+                                </div>
+                                <div class="border-t border-gray-700 pt-4 space-y-4">
+                                    <details class="border border-gray-700 rounded-lg"><summary class="p-3 flex justify-between items-center font-semibold text-gray-200 text-sm uppercase tracking-wider hover:bg-gray-700/50 rounded-t-lg"><div class="flex items-center gap-2"><i class="fa-solid fa-users"></i> Related Accounts</div><i class="fa-solid fa-chevron-right accordion-icon"></i></summary><div class="p-4 border-t border-gray-700">${relatedAccountsHTML}</div></details>
+                                    <details class="border border-gray-700 rounded-lg"><summary class="p-3 flex justify-between items-center font-semibold text-gray-200 text-sm uppercase tracking-wider hover:bg-gray-700/50 rounded-t-lg"><div class="flex items-center gap-2"><i class="fa-solid fa-info-circle"></i> Audit Information</div><i class="fa-solid fa-chevron-right accordion-icon"></i></summary><div class="p-4 border-t border-gray-700">${auditHTML}</div></details>
+                                </div>
+                            </div>`;
                     };
 
                     const filterAndRender = () => {
@@ -419,7 +432,8 @@
                             const commId = parseInt(item.dataset.commId, 10);
                             const logData = communicationData.find(log => log.id === commId);
                             if (logData) {
-                                window.parent.showAppModal(`Communication Log: ${logData.subject}`, createCommLogModalHTML(logData));
+                                // Request a wider modal by passing a size class
+                                window.parent.showAppModal(`Communication Log: ${logData.subject}`, createCommLogModalHTML(logData), '3xl');
                             }
                         }
                     });
@@ -436,3 +450,4 @@
     </script>
 </body>
 </html>
+
