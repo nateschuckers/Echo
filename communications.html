@@ -408,7 +408,7 @@
                                     <div class="flex items-center gap-3 text-sm"><i class="fa-solid fa-hashtag w-4 text-center text-gray-400"></i><span class="text-gray-400">Log ID:</span> <span class="font-mono text-gray-200">${log.id}</span></div>
                                 </div>
                                 <div class="space-y-4">
-                                    <div><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Notes</h4><div class="text-gray-300 space-y-2 leading-relaxed">${log.fullText}</div></div>
+                                    <div><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Communication</h4><div class="text-gray-300 space-y-2 leading-relaxed">${log.fullText}</div></div>
                                     <div><h4 class="font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wider">Attachments (${log.attachments.length})</h4>${attachmentsHTML}</div>
                                 </div>
                                 <div class="border-t border-gray-700 pt-4 space-y-4">
@@ -432,8 +432,11 @@
                             const commId = parseInt(item.dataset.commId, 10);
                             const logData = communicationData.find(log => log.id === commId);
                             if (logData) {
+                                const iconMap = { 'Email': { i: 'fa-envelope', c: 'blue' }, 'Phone Call': { i: 'fa-phone', c: 'green' }, 'Meeting': { i: 'fa-users', c: 'sky' }, 'Mass Email': { i: 'fa-envelope-open-text', c: 'blue' } };
+                                const icon = iconMap[logData.type] || { i: 'fa-question-circle', c: 'gray' };
+                                const modalTitleHTML = `<div class="flex items-center gap-3"><div class="log-icon bg-${icon.c}-100 text-${icon.c}-600 dark:bg-${icon.c}-900/50 dark:text-${icon.c}-400 !w-8 !h-8"><i class="fa-solid ${icon.i}"></i></div><span class="text-xl font-semibold">${logData.subject}</span></div>`;
                                 // Request a wider modal by passing a size class
-                                window.parent.showAppModal(`Communication Log: ${logData.subject}`, createCommLogModalHTML(logData), '3xl');
+                                window.parent.showAppModal(modalTitleHTML, createCommLogModalHTML(logData), '5xl');
                             }
                         }
                     });
@@ -450,4 +453,5 @@
     </script>
 </body>
 </html>
+
 
