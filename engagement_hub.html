@@ -88,6 +88,7 @@
             align-items: center;
             justify-content: center;
             z-index: 50;
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
@@ -224,7 +225,53 @@
         </div>
     </div>
 
+    <!-- Add Attendee Modal -->
+    <div id="add-attendee-modal" class="modal-overlay hidden">
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-8 w-full max-w-md m-4 shadow-xl">
+            <h2 class="text-2xl font-bold mb-4">Add Attendee</h2>
+            <p class="text-gray-400 mb-6">For: <span id="attendee-modal-event-name" class="font-semibold"></span></p>
+            <form id="add-attendee-form" class="space-y-4">
+                <input type="hidden" id="attendee-event-name-hidden">
+                <div>
+                    <label for="attendee-name" class="block mb-2 text-sm font-medium text-gray-300">Full Name</label>
+                    <input type="text" id="attendee-name" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="attendee-email" class="block mb-2 text-sm font-medium text-gray-300">Email Address</label>
+                    <input type="email" id="attendee-email" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5" required>
+                </div>
+                <div class="flex justify-end pt-4 space-x-3">
+                    <button type="button" id="cancel-attendee-modal" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold">Confirm Attendee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Volunteer Modal -->
+    <div id="add-volunteer-modal" class="modal-overlay hidden">
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-8 w-full max-w-md m-4 shadow-xl">
+            <h2 class="text-2xl font-bold mb-4">Add Volunteer</h2>
+            <p class="text-gray-400 mb-6">For: <span id="volunteer-modal-opp-name" class="font-semibold"></span></p>
+            <form id="add-volunteer-form" class="space-y-4">
+                <input type="hidden" id="volunteer-opp-name-hidden">
+                <div>
+                    <label for="volunteer-name" class="block mb-2 text-sm font-medium text-gray-300">Full Name</label>
+                    <input type="text" id="volunteer-name" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="volunteer-email" class="block mb-2 text-sm font-medium text-gray-300">Email Address</label>
+                    <input type="email" id="volunteer-email" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5" required>
+                </div>
+                <div class="flex justify-end pt-4 space-x-3">
+                    <button type="button" id="cancel-volunteer-modal" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold">Confirm Volunteer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="engagement_hub.js"></script>
 </body>
 </html>
+
